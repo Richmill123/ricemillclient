@@ -1,0 +1,26 @@
+.dialog-content {
+  min-width: 600px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-divider {
+  margin: 1rem 0;
+}
+
+.mat-mdc-dialog-actions {
+  padding: 16px 24px;
+  margin: 0 -24px -24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 600px) {
+  .dialog-content {
+    min-width: 100%;
+  }
+}

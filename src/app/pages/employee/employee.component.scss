@@ -1,0 +1,134 @@
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dialog-content {
+  padding: 24px 32px;
+  overflow-y: auto;
+  max-height: 80vh;
+  min-width: 700px; 
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+  
+  .mat-mdc-form-field-infix {
+    min-height: 56px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  
+  .mat-mdc-input-element, 
+  .mat-mdc-select-value {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .mat-mdc-form-field-label {
+    font-size: 1rem;
+  }
+
+  textarea.mat-mdc-input-element {
+    min-height: 100px;
+  }
+}
+
+h3 {
+  margin: 1.5rem 0 0.5rem 0;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+mat-divider {
+  margin: 1rem 0;
+}
+
+.mat-mdc-dialog-actions {
+  padding: 16px 32px 24px;
+  margin: 0 -32px -24px;
+  background: #f5f5f5;
+  
+  button {
+    min-width: 100px;
+    padding: 0 24px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 36px;
+  }
+}
+
+@media (max-width: 800px) {
+  .dialog-content {
+    min-width: 100%;
+    padding: 16px 20px;
+  }
+  
+  .mat-mdc-dialog-actions {
+    padding: 12px 20px 20px;
+    margin: 0 -20px -20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    
+    > * {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .dialog-form {
+    min-width: 100%;
+  }
+}
+
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+  
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+}
+
+.ag-theme-alpine {
+  --ag-foreground-color: #333;
+  --ag-background-color: #fff;
+  --ag-header-foreground-color: #333;
+  --ag-header-background-color: #f5f5f5;
+  --ag-odd-row-background-color: #f9f9f9;
+  --ag-header-column-resize-handle-color: #666;
+  
+  .ag-header-cell {
+    font-weight: 600;
+  }
+  
+  .ag-row-hover {
+    background-color: #f0f0f0 !important;
+  }
+  
+  .ag-cell {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+  }
+}

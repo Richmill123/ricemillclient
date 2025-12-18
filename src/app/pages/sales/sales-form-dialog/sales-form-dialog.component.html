@@ -1,0 +1,109 @@
+<h2 mat-dialog-title class="px-6 pt-4">
+  {{ data.isEdit ? 'Edit' : 'Add' }} Sale
+</h2>
+
+<mat-dialog-content class="px-6 py-4">
+  <form [formGroup]="form" class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Phone Number</mat-label>
+        <input matInput formControlName="phoneNumber" required />
+        <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')">Phone number is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="md:col-span-2">
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="address" rows="2" required></textarea>
+        <mat-error *ngIf="form.get('address')?.hasError('required')">Address is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-medium">Items</h3>
+      <button mat-raised-button color="primary" type="button" (click)="addItem()" [disabled]="loading">
+        <mat-icon>add</mat-icon>
+        Add Item
+      </button>
+    </div>
+
+    <div formArrayName="items" class="flex flex-col gap-3">
+      <div
+        *ngFor="let ctrl of itemsArray.controls; let i = index"
+        class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end"
+        [formGroupName]="i">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Item Type</mat-label>
+          <mat-select formControlName="itemType" required>
+            <mat-option *ngFor="let t of itemTypes" [value]="t">{{ t }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" formControlName="quantity" (input)="onItemValueChange(i)" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Rate</mat-label>
+          <input matInput type="number" formControlName="rate" (input)="onItemValueChange(i)" required />
+        </mat-form-field>
+
+        <div class="flex gap-2 items-end">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" formControlName="amount" readonly />
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            color="warn"
+            type="button"
+            (click)="removeItem(i)"
+            [disabled]="loading || itemsArray.length <= 1"
+            aria-label="Remove item">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Status</mat-label>
+        <mat-select formControlName="paymentStatus" required>
+          <mat-option *ngFor="let s of paymentStatuses" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod" required>
+          <mat-option *ngFor="let m of paymentMethods" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="md:col-span-2">
+        <mat-label>Total Amount</mat-label>
+        <input matInput type="number" formControlName="totalAmount" readonly />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="px-6 pb-4 flex justify-end gap-2">
+  <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid || loading">
+    <span *ngIf="!loading">{{ data.isEdit ? 'Update' : 'Save' }}</span>
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+  </button>
+</mat-dialog-actions>

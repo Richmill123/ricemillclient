@@ -1,0 +1,64 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <div class="login-header">
+      <mat-icon class="logo">agriculture</mat-icon>
+      <h1>Rice Mill Management</h1>
+      <p>Sign in to continue</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm" class="login-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput 
+               [(ngModel)]="username" 
+               name="username" 
+               #usernameInput="ngModel"
+               required
+               minlength="3"
+               maxlength="30"
+               autocomplete="username">
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)">
+          <span *ngIf="usernameInput.errors?.['required']">Username is required</span>
+          <span *ngIf="usernameInput.errors?.['minlength']">Username must be at least 3 characters</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput 
+               [type]="hidePassword ? 'password' : 'text'" 
+               [(ngModel)]="password" 
+               name="password" 
+               #passwordInput="ngModel"
+               required
+               minlength="6"
+               autocomplete="current-password">
+        <button type="button" mat-icon-button matSuffix 
+                (click)="hidePassword = !hidePassword" 
+                [attr.aria-label]="'Hide password'"
+                tabindex="-1">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)">
+          <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
+          <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters</span>
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button 
+              color="primary" 
+              type="submit" 
+              class="login-button"
+              [disabled]="!loginForm.form.valid || isLoading"
+              [class.button-loading]="isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <mat-spinner diameter="24" *ngIf="isLoading"></mat-spinner>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>© 2025 Rice Mill Management System</p>
+    </div>
+  </mat-card>
+</div>

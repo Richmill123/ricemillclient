@@ -1,0 +1,167 @@
+<div class="dashboard container mx-auto p-4">
+  <div class="header flex items-center justify-between gap-4 mb-4">
+    <div>
+      <h1 class="text-2xl font-bold">Dashboard</h1>
+      <div class="text-sm text-slate-500" *ngIf="data">Year {{ data.yearly.year }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="flex justify-center items-center py-10">
+    <mat-spinner diameter="44"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div *ngIf="!data" class="empty-state">
+      No dashboard data.
+    </div>
+
+    <ng-container *ngIf="data as d">
+      <div class="kpi-grid">
+        <mat-card class="kpi-card kpi-revenue">
+          <div class="kpi-top">
+            <div class="kpi-title">Revenue</div>
+            <mat-icon class="kpi-icon">trending_up</mat-icon>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(d.revenue.total) }}</div>
+          <div class="kpi-sub">
+            <span>Sales: {{ formatCurrency(d.revenue.sales) }}</span>
+            <span>Orders: {{ formatCurrency(d.revenue.orders) }}</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="kpi-card kpi-expense">
+          <div class="kpi-top">
+            <div class="kpi-title">Expense</div>
+            <mat-icon class="kpi-icon">payments</mat-icon>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(d.expense.total) }}</div>
+          <div class="kpi-sub">
+            <span>Wages: {{ formatCurrency(d.expense.wages) }}</span>
+            <span>Salary: {{ formatCurrency(d.expense.salary) }}</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="kpi-card" [class.kpi-profit-pos]="d.profit >= 0" [class.kpi-profit-neg]="d.profit < 0">
+          <div class="kpi-top">
+            <div class="kpi-title">Profit</div>
+            <mat-icon class="kpi-icon">account_balance</mat-icon>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(d.profit) }}</div>
+          <div class="kpi-sub">
+            <span>Net: {{ d.profit >= 0 ? 'Positive' : 'Loss' }}</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="kpi-card kpi-bags">
+          <div class="kpi-top">
+            <div class="kpi-title">Paddy Processed</div>
+            <mat-icon class="kpi-icon">inventory_2</mat-icon>
+          </div>
+          <div class="kpi-value">{{ formatNumber(d.paddyProcessed.totalBags) }} Bags</div>
+          <div class="kpi-sub">
+            <span>Paid Bags: {{ formatNumber(d.paddyProcessed.paidBags) }}</span>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="content-grid">
+        <mat-card class="panel chart-panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Yearly Profit Trend</div>
+              <div class="panel-sub">{{ d.yearly.year }} (monthly)</div>
+            </div>
+            <div class="panel-metrics">
+              <div class="metric">
+                <div class="metric-label">Revenue</div>
+                <div class="metric-value">{{ formatCurrency(d.revenue.total) }}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Expense</div>
+                <div class="metric-value">{{ formatCurrency(d.expense.total) }}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Profit</div>
+                <div class="metric-value" [class.pos]="d.profit >= 0" [class.neg]="d.profit < 0">{{ formatCurrency(d.profit) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-bar bar-revenue"></div>
+              <span>Revenue</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-bar bar-expense"></div>
+              <span>Expense</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-bar bar-profit-pos"></div>
+              <span>Profit</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-bar bar-profit-neg"></div>
+              <span>Loss</span>
+            </div>
+          </div>
+
+          <div class="chart-grouped" *ngIf="monthBars.length">
+            <div class="chart-col" *ngFor="let b of monthBars" [attr.title]="b.tooltip">
+              <div class="bars-wrapper">
+                <div class="bar-container">
+                  <div class="bar bar-revenue" [style.height.%]="b.revenueHeight || 0"></div>
+                </div>
+                <div class="bar-container">
+                  <div class="bar bar-expense" [style.height.%]="b.expenseHeight || 0"></div>
+                </div>
+                <div class="bar-container">
+                  <div class="bar" [class.bar-profit-pos]="b.profit >= 0" [class.bar-profit-neg]="b.profit < 0" [style.height.%]="b.profitHeight || 0"></div>
+                </div>
+              </div>
+              <div class="bar-label">{{ b.label }}</div>
+            </div>
+          </div>
+
+          <div class="chart-empty" *ngIf="!monthBars.length">
+            No monthly data.
+          </div>
+        </mat-card>
+
+        <mat-card class="panel">
+          <div class="panel-header compact">
+            <div class="panel-title">Sales (by item type)</div>
+          </div>
+          <div class="table">
+            <div class="row head">
+              <div>Item</div>
+              <div class="right">Qty</div>
+              <div class="right">Amount</div>
+            </div>
+            <div class="row" *ngFor="let key of ['bran','husk','black rice','broken rice','other']">
+              <div class="cap">{{ key }}</div>
+              <div class="right">{{ formatNumber(d.sales.byItemType[key]?.quantity ?? 0) }}</div>
+              <div class="right">{{ formatCurrency(d.sales.byItemType[key]?.amount ?? 0) }}</div>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="panel">
+          <div class="panel-header compact">
+            <div class="panel-title">Stock Available</div>
+          </div>
+          <div class="table">
+            <div class="row head two-col">
+              <div>Item</div>
+              <div class="right">Qty</div>
+            </div>
+            <div class="row two-col" *ngFor="let key of ['bran','husk','black rice','broken rice','other']">
+              <div class="cap">{{ key }}</div>
+              <div class="right">{{ formatNumber(d.stock.available[key] ?? 0) }}</div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

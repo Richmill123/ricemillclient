@@ -1,0 +1,121 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Order' : 'Add New Order' }}</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="order-form" #form="ngForm">
+    <div class="error-message" *ngIf="error" @fadeIn>
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" placeholder="Enter customer name" required>
+          <mat-error *ngIf="isFieldInvalid('name')">
+            {{ getErrorMessage('name') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Village Name</mat-label>
+          <input matInput formControlName="villageName" placeholder="Enter village name" required>
+          <mat-error *ngIf="isFieldInvalid('villageName')">
+            {{ getErrorMessage('villageName') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <textarea matInput formControlName="address" placeholder="Enter full address" rows="2" required></textarea>
+          <mat-error *ngIf="isFieldInvalid('address')">
+            {{ getErrorMessage('address') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber" type="tel" placeholder="Enter 10-digit phone number" required>
+          <mat-hint>Enter a 10-digit phone number</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('phoneNumber')">
+            {{ getErrorMessage('phoneNumber') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Type of Paddy</mat-label>
+          <input matInput formControlName="typeOfPaddy" placeholder="Enter paddy type" required>
+          <mat-hint>E.g., BPT 5204, Sona Masoori, etc.</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('typeOfPaddy')">
+            {{ getErrorMessage('typeOfPaddy') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Number of Bags</mat-label>
+          <input matInput type="number" formControlName="numberOfBags" min="1" required>
+          <mat-hint>Minimum 1, Maximum 10000</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('numberOfBags')">
+            {{ getErrorMessage('numberOfBags') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="totalAmount" min="0" step="0.01" required>
+          <mat-hint>Enter the total amount</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('totalAmount')">
+            {{ getErrorMessage('totalAmount') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Advance Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="advanceAmount" min="0" step="0.01" required>
+          <mat-hint>Enter advance amount</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('advanceAmount') || orderForm.hasError('advanceExceedsTotal')">
+            {{ getErrorMessage('advanceAmount') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('status')">
+            {{ getErrorMessage('status') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" type="button" (click)="onSubmit()"  [disabled]="loading">
+    <span *ngIf="!loading">{{ isEdit ? 'Update' : 'Save' }}</span>
+    <mat-spinner *ngIf="loading" diameter="20" class="me-2"></mat-spinner>
+  </button>
+</mat-dialog-actions>
