@@ -63,9 +63,6 @@ export class EmployeeFormDialogComponent implements OnInit {
       maritalStatus: ['', Validators.required],
       salary: [0, [Validators.required, Validators.min(0)]]
     });
-    this.dialogRef.afterOpened().subscribe(() => {
-        this.ngOnInit();
-    });
   }
 
   ngOnInit(): void {

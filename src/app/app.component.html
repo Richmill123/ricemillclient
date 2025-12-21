@@ -1,8 +1,9 @@
 <div class="app-container">
-  <app-header *ngIf="!isLoginPage" (toggleSidebar)="toggleSidebar()"></app-header>
+ 
   
   <div class="main-container">
     <mat-sidenav-container class="sidenav-container">
+       <app-header *ngIf="!isLoginPage" (toggleSidebar)="toggleSidebar()"></app-header>
       <mat-sidenav 
         *ngIf="!isLoginPage"
         #sidenav 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColDef, GridApi, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
@@ -60,10 +60,10 @@ export class SalesComponent {
       width: 120,
       cellRenderer: (params: ICellRendererParams) => {
         const div = document.createElement('div');
-        div.className = 'flex justify-start space-x-2';
+        div.className = 'gridActionBtnWrap';
 
         const editBtn = document.createElement('button');
-        editBtn.className = 'mat-icon-button';
+        editBtn.className = 'mat-icon-button gridAction-edit';
         editBtn.style.color = '#3f51b5';
         editBtn.innerHTML = '<mat-icon>edit</mat-icon>';
 
@@ -74,7 +74,7 @@ export class SalesComponent {
         });
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'mat-icon-button';
+        deleteBtn.className = 'mat-icon-button gridAction-delete';
         deleteBtn.style.color = '#f44336';
         deleteBtn.innerHTML = '<mat-icon>delete</mat-icon>';
 
@@ -99,6 +99,7 @@ export class SalesComponent {
   constructor(
     private salesService: SalesService,
     private dialog: MatDialog,
+    private zone: NgZone,
     private snackBar: MatSnackBar
   ) {
     this.searchSubject.pipe(
@@ -187,7 +188,7 @@ export class SalesComponent {
         },
         error: (error) => {
           console.error('Error adding sale:', error);
-          this.snackBar.open('Error adding sale', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+          this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
         }
       });
     });
@@ -200,31 +201,32 @@ export class SalesComponent {
       this.snackBar.open('Sale not found', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
       return;
     }
+    this.zone.run(() => {
+      const dialogRef = this.dialog.open(SalesFormDialogComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        disableClose: true,
+        autoFocus: false,
+        data: { isEdit: true, sale: { ...sale } }
+      });
 
-    const dialogRef = this.dialog.open(SalesFormDialogComponent, {
-      width: '900px',
-      maxWidth: '95vw',
-      disableClose: true,
-      autoFocus: false,
-      data: { isEdit: true, sale: { ...sale } }
-    });
-
-    dialogRef.afterClosed().subscribe((result?: SalesDialogResult) => {
-      if (!result) return;
-      this.loading = true;
-      this.salesService.updateSale(id, {
-        ...result,
-        clientId: this.clientId
-      }).subscribe({
-        next: () => {
-          this.snackBar.open('Sale updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
-          this.loadSales();
-        },
-        error: (error) => {
-          console.error('Error updating sale:', error);
-          this.snackBar.open('Error updating sale', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
-          this.loading = false;
-        }
+      dialogRef.afterClosed().subscribe((result?: SalesDialogResult) => {
+        if (!result) return;
+        this.loading = true;
+        this.salesService.updateSale(id, {
+          ...result,
+          clientId: this.clientId
+        }).subscribe({
+          next: () => {
+            this.snackBar.open('Sale updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+            this.loadSales();
+          },
+          error: (error) => {
+            console.error('Error updating sale:', error);
+            this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+            this.loading = false;
+          }
+        });
       });
     });
   }

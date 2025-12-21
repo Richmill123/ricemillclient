@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, NgZone } from '@angular/core';
 import { ColDef, GridReadyEvent, GridApi, ICellRendererParams, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
 import { CommonModule } from '@angular/common';
@@ -23,8 +22,8 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-       MatFormFieldModule, 
-    MatInputModule      
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.scss']
@@ -32,38 +31,38 @@ import { MatInputModule } from '@angular/material/input';
 export class EmployeeComponent {
   private gridApi!: GridApi;
   public clientId = JSON.parse(sessionStorage.getItem('user') || '');
-  
+
   rowData: any[] = [];
   loading = false;
   searchTerm = '';
   private searchSubject = new Subject<string>();
-  
+
   columnDefs: ColDef[] = [
-    { 
-      field: 'name', 
-      headerName: 'Name', 
-      sortable: true, 
+    {
+      field: 'name',
+      headerName: 'Name',
+      sortable: true,
       filter: true,
       flex: 1
     },
-    { 
-      field: 'phoneNumber', 
-      headerName: 'Phone', 
-      sortable: true, 
+    {
+      field: 'phoneNumber',
+      headerName: 'Phone',
+      sortable: true,
       filter: true,
       width: 150
     },
-    { 
-      field: 'gender', 
-      headerName: 'Gender', 
-      sortable: true, 
+    {
+      field: 'gender',
+      headerName: 'Gender',
+      sortable: true,
       filter: true,
       width: 120
     },
-    { 
-      field: 'salary', 
-      headerName: 'Salary', 
-      sortable: true, 
+    {
+      field: 'salary',
+      headerName: 'Salary',
+      sortable: true,
       filter: true,
       width: 150,
       valueFormatter: this.currencyFormatter
@@ -76,33 +75,33 @@ export class EmployeeComponent {
       width: 120,
       cellRenderer: (params: ICellRendererParams) => {
         const div = document.createElement('div');
-        div.className = 'flex justify-start space-x-2';
-        
+        div.className = 'gridActionBtnWrap';
+
         const editBtn = document.createElement('button');
-        editBtn.className = 'mat-icon-button';
+        editBtn.className = 'mat-icon-button gridAction-edit';
         editBtn.style.color = '#3f51b5';
         editBtn.innerHTML = '<mat-icon>edit</mat-icon>';
-        
+
         const componentRef = this;
-        
+
         editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           componentRef.onEditClick(params.data._id);
         });
-        
+
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'mat-icon-button';
+        deleteBtn.className = 'mat-icon-button gridAction-delete';
         deleteBtn.style.color = '#f44336';
         deleteBtn.innerHTML = '<mat-icon>delete</mat-icon>';
-        
+
         deleteBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           componentRef.onDeleteClick(params.data._id);
         });
-        
+
         div.appendChild(editBtn);
         div.appendChild(deleteBtn);
-        
+
         return div;
       }
     }
@@ -117,6 +116,7 @@ export class EmployeeComponent {
   constructor(
     private employeeService: EmployeeService,
     private dialog: MatDialog,
+    private zone: NgZone,
     private snackBar: MatSnackBar
   ) {
     this.searchSubject.pipe(
@@ -151,15 +151,15 @@ export class EmployeeComponent {
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         let filteredData = data;
-        
+
         if (this.searchTerm) {
           const searchLower = this.searchTerm.toLowerCase();
-          filteredData = data.filter((employee: Employee) => 
+          filteredData = data.filter((employee: Employee) =>
             employee.name.toLowerCase().includes(searchLower) ||
             employee.phoneNumber.includes(this.searchTerm)
           );
         }
-        
+
         this.rowData = filteredData;
         if (this.gridApi) {
           this.gridApi.setGridOption('rowData', filteredData);
@@ -168,7 +168,7 @@ export class EmployeeComponent {
       },
       error: (error) => {
         console.error('Error loading employees:', error);
-        this.snackBar.open('Error loading employees', 'Close', { 
+        this.snackBar.open('Error loading employees', 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar']
         });
@@ -178,14 +178,15 @@ export class EmployeeComponent {
   }
 
   onAddClick(): void {
-    const dialogRef = this.dialog.open(EmployeeFormDialogComponent, 
-      
-  {
-    autoFocus: false,    
-  restoreFocus: false,
-      width: '600px',
-      data: { isEdit: false }
-    });
+    const dialogRef = this.dialog.open(EmployeeFormDialogComponent,
+
+      {
+        autoFocus: false,
+        restoreFocus: false,
+        width: '700px',
+        height: '80vh',
+        data: { isEdit: false }
+      });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -199,7 +200,7 @@ export class EmployeeComponent {
           },
           error: (error) => {
             console.error('Error adding employee:', error);
-            this.snackBar.open('Error adding employee', 'Close', { 
+            this.snackBar.open(error?.error?.message, 'Close', {
               duration: 3000,
               panelClass: ['error-snackbar']
             });
@@ -212,42 +213,43 @@ export class EmployeeComponent {
   onEditClick(id: string): void {
     const employee = this.rowData.find(item => item._id === id);
     if (!employee) {
-      this.snackBar.open('Employee not found', 'Close', { 
+      this.snackBar.open('Employee not found', 'Close', {
         duration: 3000,
         panelClass: ['error-snackbar']
       });
       return;
     }
+    this.zone.run(() => {
+      const dialogRef = this.dialog.open(EmployeeFormDialogComponent, {
+        width: '700px',
+        height: '80vh',
+        data: {
+          isEdit: true,
+          employee: { ...employee }
+        }
+      });
 
-    const dialogRef = this.dialog.open(EmployeeFormDialogComponent, {
-      width: '600px',
-      data: { 
-        isEdit: true,
-        employee: { ...employee }
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        this.loading = true;
-        this.employeeService.updateEmployee(employee._id, result).subscribe({
-          next: () => {
-            this.snackBar.open('Employee updated successfully', 'Close', { 
-              duration: 3000,
-              panelClass: ['success-snackbar']
-            });
-            this.loadEmployees();
-          },
-          error: (error) => {
-            console.error('Error updating employee:', error);
-            this.snackBar.open('Error updating employee', 'Close', { 
-              duration: 3000,
-              panelClass: ['error-snackbar']
-            });
-            this.loading = false;
-          }
-        });
-      }
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          this.loading = true;
+          this.employeeService.updateEmployee(employee._id, result).subscribe({
+            next: () => {
+              this.snackBar.open('Employee updated successfully', 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
+              this.loadEmployees();
+            },
+            error: (error) => {
+              this.snackBar.open(error?.error?.message, 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
+              this.loading = false;
+            }
+          });
+        }
+      });
     });
   }
 
@@ -256,7 +258,7 @@ export class EmployeeComponent {
       this.loading = true;
       this.employeeService.deleteEmployee(id).subscribe({
         next: () => {
-          this.snackBar.open('Employee deleted successfully', 'Close', { 
+          this.snackBar.open('Employee deleted successfully', 'Close', {
             duration: 3000,
             panelClass: ['success-snackbar']
           });
@@ -264,7 +266,7 @@ export class EmployeeComponent {
         },
         error: (error) => {
           console.error('Error deleting employee:', error);
-          this.snackBar.open('Error deleting employee. Please try again.', 'Close', { 
+          this.snackBar.open('Error deleting employee. Please try again.', 'Close', {
             duration: 3000,
             panelClass: ['error-snackbar']
           });
@@ -274,4 +276,3 @@ export class EmployeeComponent {
     }
   }
 }
-        

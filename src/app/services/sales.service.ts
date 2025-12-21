@@ -34,7 +34,7 @@ export type SaleUpdateRequest = Omit<Sale, '_id' | 'createdAt' | 'updatedAt'>;
   providedIn: 'root'
 })
 export class SalesService {
-  private apiUrl = 'https://richmill.onrender.com/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 

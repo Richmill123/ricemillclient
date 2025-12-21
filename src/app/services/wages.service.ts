@@ -26,7 +26,7 @@ export type WageUpdateRequest = Partial<Omit<Wage, '_id' | 'createdAt' | 'update
   providedIn: 'root'
 })
 export class WagesService {
-  private apiUrl = 'https://richmill.onrender.com/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 

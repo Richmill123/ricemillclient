@@ -26,7 +26,7 @@ export type ExpenseUpdateRequest = Partial<Omit<Expense, '_id' | 'createdAt' | '
   providedIn: 'root'
 })
 export class ExpenseService {
-  private apiUrl = 'https://richmill.onrender.com/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 

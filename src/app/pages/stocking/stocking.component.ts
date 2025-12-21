@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ColDef, GridReadyEvent, GridApi, ICellRendererParams, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
 import { CommonModule } from '@angular/common';
@@ -18,7 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 
 const environment = {
-  apiUrl: 'https://richmill.onrender.com/api'
+  apiUrl: 'https://richmill-git-main-richmill123s-projects.vercel.app/api'
 };
 
 @Component({
@@ -41,25 +40,25 @@ const environment = {
 })
 export class StockingComponent implements OnInit {
   private gridApi!: GridApi;
- public clientId = JSON.parse(sessionStorage.getItem('user') || '');
-  
+  public clientId = JSON.parse(sessionStorage.getItem('user') || '');
+
   rowData: any[] = [];
   loading = false;
   searchTerm = '';
   private searchSubject = new Subject<string>();
-  
+
   columnDefs: ColDef[] = [
-    { 
-      field: 'itemType', 
-      headerName: 'Item Type', 
-      sortable: true, 
+    {
+      field: 'itemType',
+      headerName: 'Item Type',
+      sortable: true,
       filter: true,
       flex: 1
     },
-    { 
-      field: 'availableQuantity', 
-      headerName: 'Available Quantity', 
-      sortable: true, 
+    {
+      field: 'availableQuantity',
+      headerName: 'Available Quantity',
+      sortable: true,
       filter: true,
       width: 150,
       valueFormatter: this.quantityFormatter
@@ -79,33 +78,33 @@ export class StockingComponent implements OnInit {
       width: 120,
       cellRenderer: (params: ICellRendererParams) => {
         const div = document.createElement('div');
-        div.className = 'flex justify-start space-x-2';
-        
+        div.className = 'gridActionBtnWrap';
+
         const editBtn = document.createElement('button');
-        editBtn.className = 'mat-icon-button';
+        editBtn.className = 'mat-icon-button gridAction-edit';
         editBtn.style.color = '#3f51b5';
         editBtn.innerHTML = '<mat-icon>edit</mat-icon>';
-        
+
         const componentRef = this;
 
         editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           componentRef.onEditClick(params.data._id);
         });
-        
+
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'mat-icon-button';
+        deleteBtn.className = 'mat-icon-button gridAction-delete';
         deleteBtn.style.color = '#f44336';
         deleteBtn.innerHTML = '<mat-icon>delete</mat-icon>';
-        
+
         deleteBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           componentRef.onDeleteClick(params.data._id);
         });
-        
+
         div.appendChild(editBtn);
         div.appendChild(deleteBtn);
-        
+
         return div;
       }
     }
@@ -120,6 +119,7 @@ export class StockingComponent implements OnInit {
   constructor(
     private stockService: StockService,
     private dialog: MatDialog,
+    private zone: NgZone,
     private snackBar: MatSnackBar
   ) {
     this.searchSubject.pipe(
@@ -159,14 +159,14 @@ export class StockingComponent implements OnInit {
     this.stockService.getStocks().subscribe({
       next: (data) => {
         let filteredData = data;
-        
+
         if (this.searchTerm) {
           const searchLower = this.searchTerm.toLowerCase();
-          filteredData = data.filter((stock: Stock) => 
+          filteredData = data.filter((stock: Stock) =>
             stock.itemType.toLowerCase().includes(searchLower)
           );
         }
-        
+
         this.rowData = filteredData;
         if (this.gridApi) {
           this.gridApi.setGridOption('rowData', filteredData);
@@ -175,7 +175,7 @@ export class StockingComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading stocks:', error);
-        this.snackBar.open('Error loading stocks', 'Close', { 
+        this.snackBar.open('Error loading stocks', 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar']
         });
@@ -201,8 +201,8 @@ export class StockingComponent implements OnInit {
             this.loadStocks();
           },
           error: (error) => {
-            console.error('Error adding stock:', error);
-            this.snackBar.open('Error adding stock', 'Close', { duration: 3000 });
+            console.error(error?.error?.message, error);
+            this.snackBar.open(error?.error?.message, 'Close', { duration: 3000 });
           }
         });
       }
@@ -212,47 +212,48 @@ export class StockingComponent implements OnInit {
   onEditClick(id: string): void {
     const stock = this.rowData.find(item => item._id === id);
     if (!stock) {
-      this.snackBar.open('Stock item not found', 'Close', { 
+      this.snackBar.open('Stock item not found', 'Close', {
         duration: 3000,
         panelClass: ['error-snackbar']
       });
       return;
     }
+    this.zone.run(() => {
+      const dialogRef = this.dialog.open(StockFormDialogComponent, {
+        width: '500px',
+        height: '300px',
+        data: { stock: { ...stock } },
+        ariaLabel: 'Edit Stock Item',
+        role: 'dialog',
+        autoFocus: false,
+        restoreFocus: true
+      });
 
-    const dialogRef = this.dialog.open(StockFormDialogComponent, {
-      width: '500px',
-      height: '300px',
-      data: { stock: { ...stock } },
-      ariaLabel: 'Edit Stock Item',
-      role: 'dialog',
-      autoFocus: false,
-      restoreFocus: true
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        this.loading = true;
-            this.stockService.updateStock(stock._id, {
-              quantity: result.availableQuantity,
-              clientId: this.clientId
-            }).subscribe({
-              next: () => {
-                this.snackBar.open('Stock updated successfully', 'Close', { 
-                  duration: 3000,
-                  panelClass: ['success-snackbar']
-                });
-                this.loadStocks();
-              },
-              error: (error) => {
-                console.error('Error updating stock:', error);
-                this.snackBar.open('Error updating stock', 'Close', { 
-                  duration: 3000,
-                  panelClass: ['error-snackbar']
-                });
-                this.loading = false;
-              }
-            });
-      }
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          this.loading = true;
+          this.stockService.updateStock(stock._id, {
+            quantity: result.availableQuantity,
+            clientId: this.clientId
+          }).subscribe({
+            next: () => {
+              this.snackBar.open('Stock updated successfully', 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
+              this.loadStocks();
+            },
+            error: (error) => {
+              console.error('Error updating stock:', error);
+              this.snackBar.open(error?.error?.message, 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
+              this.loading = false;
+            }
+          });
+        }
+      });
     });
   }
 
@@ -261,7 +262,7 @@ export class StockingComponent implements OnInit {
       this.loading = true;
       this.stockService.deleteStock(id).subscribe({
         next: () => {
-          this.snackBar.open('Stock deleted successfully', 'Close', { 
+          this.snackBar.open('Stock deleted successfully', 'Close', {
             duration: 3000,
             panelClass: ['success-snackbar']
           });
@@ -269,7 +270,7 @@ export class StockingComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error deleting stock:', error);
-          this.snackBar.open('Error deleting stock. Please try again.', 'Close', { 
+          this.snackBar.open('Error deleting stock. Please try again.', 'Close', {
             duration: 3000,
             panelClass: ['error-snackbar']
           });
@@ -343,7 +344,7 @@ export class StockFormDialogComponent {
 
 
   constructor(
-    private fb: FormBuilder,public cdr: ChangeDetectorRef,
+    private fb: FormBuilder, public cdr: ChangeDetectorRef,
     private dialogRef: MatDialogRef<StockFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private elementRef: ElementRef
@@ -351,7 +352,7 @@ export class StockFormDialogComponent {
 
     this.form = this.fb.group({
       itemType: [
-        { value: data?.stock?.itemType || ''},
+        { value: data?.stock?.itemType || '' },
         Validators.required
       ],
       availableQuantity: [
@@ -364,24 +365,24 @@ export class StockFormDialogComponent {
     });
   }
   ngOnInit() {
-  if (this.data?.stock) {
-    const itemType = this.itemTypes.find(
-      type => type.toLowerCase() === this.data.stock.itemType?.toLowerCase()
-    );
-setTimeout(() => {
-    this.form.patchValue({
-      itemType: itemType || '',
-      availableQuantity: this.data.stock.availableQuantity || 0
-    });
+    if (this.data?.stock) {
+      const itemType = this.itemTypes.find(
+        type => type.toLowerCase() === this.data.stock.itemType?.toLowerCase()
+      );
+      setTimeout(() => {
+        this.form.patchValue({
+          itemType: itemType || '',
+          availableQuantity: this.data.stock.availableQuantity || 0
+        });
 
-    if (itemType) {
-      this.form.get('itemType')?.disable();
+        if (itemType) {
+          this.form.get('itemType')?.disable();
+        }
+
+        this.cdr.detectChanges();
+      });
     }
-
-    this.cdr.detectChanges();
-  });
   }
-}
 
   onSave() {
     this.dialogRef.close(this.form.getRawValue());
@@ -459,19 +460,19 @@ export class StockFormAddDialogComponent {
     private dialogRef: MatDialogRef<StockFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-  
+
     this.form = this.fb.group({
       itemType: [
         { value: '' },
         Validators.required
       ],
       availableQuantity: [
-         0,
+        0,
         [Validators.required, Validators.min(0)]
       ]
     });
   }
-  
+
 
   onSave() {
     this.dialogRef.close(this.form.getRawValue());

@@ -64,7 +64,7 @@ export interface DashboardResponse {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'https://richmill.onrender.com/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 

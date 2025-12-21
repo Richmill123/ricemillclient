@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
       })
     };
 
-    this.http.post<any>('https://richmill.onrender.com/api/admins/login', loginData, httpOptions)
+    this.http.post<any>('https://richmill-git-main-richmill123s-projects.vercel.app/api/admins/login', loginData, httpOptions)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.isLoading = false;

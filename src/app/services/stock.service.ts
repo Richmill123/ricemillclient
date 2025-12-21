@@ -15,7 +15,7 @@ export interface Stock {
   providedIn: 'root'
 })
 export class StockService {
-  private apiUrl = 'https://richmill.onrender.com/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
   public clientId = JSON.parse(sessionStorage.getItem('user') || '');
   constructor(private http: HttpClient) {}
 

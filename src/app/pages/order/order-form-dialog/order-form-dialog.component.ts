@@ -65,7 +65,7 @@ export class OrderFormDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.isEdit = data?.isEdit || false;
-    
+
     if (this.isEdit && data?.orderData) {
       this.orderId = data.orderData._id;
     }
@@ -74,12 +74,12 @@ export class OrderFormDialogComponent implements OnInit {
       villageName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       address: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
       phoneNumber: ['', [
-        Validators.required, 
+        Validators.required,
         Validators.pattern('^[0-9]{10}$')
       ]],
       typeOfPaddy: ['', [Validators.required]],
       numberOfBags: ['', [
-        Validators.required, 
+        Validators.required,
         Validators.min(1),
         Validators.max(10000),
         Validators.pattern('^[0-9]*$')
@@ -95,7 +95,7 @@ export class OrderFormDialogComponent implements OnInit {
         Validators.pattern('^[0-9]+(\.[0-9]{1,2})?$')
       ]],
       status: [ORDER_STATUS.CREATED, [Validators.required]]
-    }, { 
+    }, {
       validators: [this.advanceLessThanTotalValidator],
       updateOn: 'blur'
     });
@@ -116,7 +116,7 @@ export class OrderFormDialogComponent implements OnInit {
         status: orderData.status
       });
     }
-    
+
     Object.keys(this.orderForm.controls).forEach(key => {
       const control = this.orderForm.get(key);
       control?.markAsUntouched();
@@ -130,9 +130,9 @@ export class OrderFormDialogComponent implements OnInit {
 
   getErrorMessage(field: string): string {
     const control = this.orderForm.get(field);
-    
+
     if (!control || !control.errors) return '';
-    
+
     if (control.hasError('required')) {
       return 'This field is required';
     } else if (control.hasError('minlength')) {
@@ -150,18 +150,18 @@ export class OrderFormDialogComponent implements OnInit {
     } else if (field === 'advanceAmount' && this.orderForm.hasError('advanceExceedsTotal')) {
       return 'Advance cannot be greater than total amount';
     }
-    
+
     return '';
   }
 
   private advanceLessThanTotalValidator(group: AbstractControl): ValidationErrors | null {
     const total = group.get('totalAmount')?.value;
     const advance = group.get('advanceAmount')?.value;
-    
+
     if (total === null || advance === null) {
       return null;
     }
-    
+
     return advance > total ? { 'advanceExceedsTotal': true } : null;
   }
 
@@ -192,7 +192,7 @@ export class OrderFormDialogComponent implements OnInit {
       clientId: this.orderService.clientId
     };
 
-    const request = this.isEdit 
+    const request = this.isEdit
       ? this.orderService.updateOrder(this.orderId!, orderData)
       : this.orderService.createOrder(orderData);
 

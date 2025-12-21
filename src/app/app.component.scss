@@ -33,8 +33,9 @@
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  min-height: calc(100vh - 140px);
-}
+    height: calc(100vh - 80px);
+    overflow: auto;
+  }
 
 /* Responsive adjustments */
 @media (max-width: 959px) {

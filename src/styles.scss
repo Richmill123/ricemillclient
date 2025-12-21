@@ -1,9 +1,9 @@
-
-html, body { 
-  height: 100%; 
-  margin: 0; 
+html,
+body {
+  height: 100%;
+  margin: 0;
   padding: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 /* Toastr Notification Styles */
@@ -31,7 +31,7 @@ html, body {
     pointer-events: auto;
     opacity: 0.98;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
     font-size: 14px;
     line-height: 1.5;
     backdrop-filter: blur(4px);
@@ -107,5 +107,177 @@ html, body {
 
   .toast-warning {
     background-color: rgba(237, 108, 2, 0.95);
+  }
+}
+
+// Scrollbar //
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.page-title {
+  font-size: 26px !important;
+  font-weight: 500 !important;
+  color: #2e2e2e !important;
+  border-bottom: 1px dashed #80808057;
+  padding-bottom: 8px;
+}
+
+// AG Grid //
+ag-grid-angular {
+  .ag-root-wrapper {
+    border-radius: 12px !important;
+  }
+  .ag-header {
+    height: 48px !important;
+    background: #fafafb !important;
+
+    .ag-header-row {
+      height: 100% !important;
+
+      .ag-header-cell {
+        height: 100% !important;
+      }
+    }
+  }
+
+  .ag-body {
+    .ag-row {
+      height: 40px !important;
+
+      .ag-cell-value {
+        display: flex;
+        align-items: center;
+      }
+
+      &.ag-row-odd {
+        background-color: #e7e7e7 !important;
+      }
+    }
+  }
+
+  .ag-paging-panel {
+    height: 48px !important;
+    justify-content: space-between !important;
+  }
+}
+
+// Search //
+.search-container {
+  display: flex;
+  justify-content: space-between;
+
+  .mdc-text-field--outlined .mat-mdc-form-field-infix,
+  .mdc-text-field--no-label .mat-mdc-form-field-infix {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    min-height: 32px !important;
+  }
+
+  .mat-mdc-floating-label {
+    top: 50% !important;
+  }
+
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+    .mdc-notched-outline--upgraded
+    .mdc-floating-label--float-above {
+    transform: translateY(calc(calc(6.75px + 40px / 2) * -1)) scale(0.75) !important;
+  }
+}
+
+.gridActionBtnWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .gridAction-edit,
+  .gridAction-delete {
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    padding: 2px 10px;
+    background: none;
+    text-transform: capitalize;
+    font-weight: 600;
+    height: 24px;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: inset 0 0 4px 0px #00000042;
+    }
+  }
+}
+
+// Dialog //
+mat-dialog-container {
+  .mat-mdc-dialog-title {
+    margin: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  mat-dialog-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  mat-dialog-content {
+     padding-top: 20px !important;
+    form {
+      .grid {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        column-gap: 8px;
+        row-gap: 12px;
+
+        mat-form-field {
+
+          .mdc-text-field--outlined .mat-mdc-form-field-infix,
+          .mdc-text-field--no-label .mat-mdc-form-field-infix {
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+
+            textarea {
+              height: 24px !important ;
+            }
+          }
+
+          .mat-mdc-form-field-infix {
+            min-height: 32px !important;
+          }
+
+          .mat-mdc-floating-label {
+            top: 50% !important;
+          }
+
+          .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+            .mdc-notched-outline--upgraded
+            .mdc-floating-label--float-above {
+            transform: translateY(calc(calc(6.75px + 40px / 2) * -1))
+              scale(0.75) !important;
+          }
+        }
+      }
+    }
   }
 }

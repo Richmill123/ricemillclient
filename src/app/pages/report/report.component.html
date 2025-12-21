@@ -1,7 +1,7 @@
 <div class="report-container">
 
   <div class="header">
-    <h2>Reports</h2>
+    <h2 class="page-title">Reports</h2>
   </div>
 
   <mat-card class="search-card">
@@ -58,13 +58,14 @@
   </div>
 
   <mat-card class="grid-card" *ngIf="isSearchClicked">
-    <div class="ag-theme-alpine grid-container"  *ngIf="rowData.length != 0">
+    <div class="ag-theme-alpine grid-container"  *ngIf="rowData.length != 0" >
       <ag-grid-angular
         #agGrid
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
+        [rowHeight]="40"
         (gridReady)="onGridReady($event)"
         style="width: 100%; height: 50vh;"
         >

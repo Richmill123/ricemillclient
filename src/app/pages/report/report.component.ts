@@ -75,7 +75,7 @@ export class ReportComponent {
 
   clientId: string = '';
 
-  private baseUrl = 'https://richmill.onrender.com/api';
+  private baseUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
 
   constructor(private http: HttpClient) {
     const user = sessionStorage.getItem('user');

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColDef, GridApi, GridReadyEvent, ICellRendererParams, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
@@ -68,10 +68,10 @@ export class ExpenseComponent {
       width: 120,
       cellRenderer: (params: ICellRendererParams) => {
         const div = document.createElement('div');
-        div.className = 'flex justify-start space-x-2';
+        div.className = 'gridActionBtnWrap';
 
         const editBtn = document.createElement('button');
-        editBtn.className = 'mat-icon-button';
+        editBtn.className = 'mat-icon-button gridAction-edit';
         editBtn.style.color = '#3f51b5';
         editBtn.innerHTML = '<mat-icon>edit</mat-icon>';
 
@@ -82,7 +82,7 @@ export class ExpenseComponent {
         });
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'mat-icon-button';
+        deleteBtn.className = 'mat-icon-button gridAction-delete';
         deleteBtn.style.color = '#f44336';
         deleteBtn.innerHTML = '<mat-icon>delete</mat-icon>';
 
@@ -107,6 +107,7 @@ export class ExpenseComponent {
   constructor(
     private expenseService: ExpenseService,
     private dialog: MatDialog,
+    private zone: NgZone,
     private snackBar: MatSnackBar
   ) {
     this.searchSubject.pipe(
@@ -205,7 +206,7 @@ export class ExpenseComponent {
         },
         error: (error) => {
           console.error('Error adding expense:', error);
-          this.snackBar.open(this.getApiErrorMessage(error, 'Error adding expense'), 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+          this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
         }
       });
     });
@@ -218,31 +219,32 @@ export class ExpenseComponent {
       this.snackBar.open('Expense not found', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
       return;
     }
+    this.zone.run(() => {
+      const dialogRef = this.dialog.open(ExpenseFormDialogComponent, {
+        width: '700px',
+        maxWidth: '95vw',
+        disableClose: true,
+        autoFocus: false,
+        data: { isEdit: true, expense: { ...expense } }
+      });
 
-    const dialogRef = this.dialog.open(ExpenseFormDialogComponent, {
-      width: '700px',
-      maxWidth: '95vw',
-      disableClose: true,
-      autoFocus: false,
-      data: { isEdit: true, expense: { ...expense } }
-    });
-
-    dialogRef.afterClosed().subscribe((result?: ExpenseDialogResult) => {
-      if (!result) return;
-      this.loading = true;
-      this.expenseService.updateExpense(id, {
-        ...result,
-        clientId: this.clientId
-      }).subscribe({
-        next: () => {
-          this.snackBar.open('Expense updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
-          this.loadExpenses();
-        },
-        error: (error) => {
-          console.error('Error updating expense:', error);
-          this.snackBar.open(this.getApiErrorMessage(error, 'Error updating expense'), 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
-          this.loading = false;
-        }
+      dialogRef.afterClosed().subscribe((result?: ExpenseDialogResult) => {
+        if (!result) return;
+        this.loading = true;
+        this.expenseService.updateExpense(id, {
+          ...result,
+          clientId: this.clientId
+        }).subscribe({
+          next: () => {
+            this.snackBar.open('Expense updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+            this.loadExpenses();
+          },
+          error: (error) => {
+            console.error('Error updating expense:', error);
+            this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+            this.loading = false;
+          }
+        });
       });
     });
   }
