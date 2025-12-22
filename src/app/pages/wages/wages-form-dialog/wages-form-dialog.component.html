@@ -4,7 +4,7 @@
 
 <mat-dialog-content class="px-6 py-4">
   <form [formGroup]="form" class="flex flex-col gap-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="formInnerWrap grid-cols-1 md:grid-cols-2 gap-4">
       <mat-form-field appearance="outline">
         <mat-label>Employee Name</mat-label>
         <input matInput formControlName="employeeName" required />
@@ -55,7 +55,7 @@
         <mat-error *ngIf="form.get('date')?.hasError('required')">Date is required</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="md:col-span-2">
+      <mat-form-field appearance="outline" class="formTextarea md:col-span-2">
         <mat-label>Notes</mat-label>
         <textarea matInput formControlName="notes" rows="2"></textarea>
       </mat-form-field>

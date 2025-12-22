@@ -86,12 +86,21 @@ export class OrderComponent implements OnInit {
       resizable: true
     },
     {
+      field: 'createdAt',
+      headerName: 'Created At',
+      filter: 'agDateColumnFilter',
+      valueFormatter: this.dateFormatter,
+      sortable: true,
+      resizable: true
+    },
+    {
       field: 'status',
       headerName: 'Status',
       filter: true,
       sortable: true,
       resizable: true
     },
+    
     this.createActionColumn()
   ];
 
@@ -157,6 +166,21 @@ export class OrderComponent implements OnInit {
 
   currencyFormatter(params: any): string {
     return '₹' + params.value.toLocaleString('en-IN');
+  }
+
+  dateFormatter(params: any) {
+    const date = new Date(params.value);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    };
+    return date.toLocaleString('en-IN', options).replace('GMT+5:30', 'IST');
   }
 
   statusCellStyle(params: any): any {

@@ -53,6 +53,14 @@ export class SalesComponent {
     { field: 'paymentStatus', headerName: 'Status', sortable: true, filter: true, width: 150 },
     { field: 'paymentMethod', headerName: 'Method', sortable: true, filter: true, width: 150 },
     {
+      field: 'createdAt',
+      headerName: 'Created At',
+      filter: 'agDateColumnFilter',
+      valueFormatter: this.dateFormatter,
+      sortable: true,
+      resizable: true
+    },
+    {
       headerName: 'Actions',
       field: 'actions',
       sortable: false,
@@ -121,7 +129,20 @@ export class SalesComponent {
       return '';
     }
   }
-
+  dateFormatter(params: any) {
+    const date = new Date(params.value);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    };
+    return date.toLocaleString('en-IN', options).replace('GMT+5:30', 'IST');
+  }
   ngOnInit(): void {
     this.loadSales();
   }

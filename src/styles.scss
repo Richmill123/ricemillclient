@@ -241,43 +241,68 @@ mat-dialog-container {
     justify-content: center !important;
   }
   mat-dialog-content {
-     padding-top: 20px !important;
+    padding-top: 20px !important;
     form {
-      .grid {
+      .formInnerWrap {
         display: flex;
         align-items: center;
         flex-wrap: wrap;
         column-gap: 8px;
         row-gap: 12px;
+      }
 
-        mat-form-field {
+      .formTextarea {
+        width: 100% !important;
+      }
 
-          .mdc-text-field--outlined .mat-mdc-form-field-infix,
-          .mdc-text-field--no-label .mat-mdc-form-field-infix {
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
+      mat-form-field:not(.formTextarea) {
+        width: 210px !important;
 
-            textarea {
-              height: 24px !important ;
-            }
-          }
+        .mat-mdc-icon-button.mat-mdc-button-base {
+          --mdc-icon-button-state-layer-size: 40px !important;
+          padding: 8px !important;
+        }
+        .mat-mdc-text-f1ield-wrapper {
+          height: 40px !important;
+        }
 
-          .mat-mdc-form-field-infix {
-            min-height: 32px !important;
-          }
+        .mat-mdc-icon-button .mat-mdc-button-touch-target {
+          height: 40px !important;
+        }
 
-          .mat-mdc-floating-label {
-            top: 50% !important;
-          }
+        .mdc-text-field--outlined .mat-mdc-form-field-infix,
+        .mdc-text-field--no-label .mat-mdc-form-field-infix {
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+        }
 
-          .mat-mdc-text-field-wrapper.mdc-text-field--outlined
-            .mdc-notched-outline--upgraded
-            .mdc-floating-label--float-above {
-            transform: translateY(calc(calc(6.75px + 40px / 2) * -1))
-              scale(0.75) !important;
-          }
+        .mat-mdc-form-field-infix {
+          min-height: 32px !important;
+        }
+
+        .mat-mdc-floating-label {
+          top: 50% !important;
+        }
+
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+          .mdc-notched-outline--upgraded
+          .mdc-floating-label--float-above {
+          transform: translateY(calc(calc(6.75px + 40px / 2) * -1)) scale(0.75) !important;
         }
       }
+    }
+  }
+}
+
+.login-form {
+  .mat-mdc-raised-button:not(:disabled) {
+    --mdc-protected-button-container-color: #397b19 !important;
+}
+  .mat-mdc-text-field-wrapper {
+    background-color: #fff;
+
+    .mat-mdc-form-field-infix {
+          border-right: 1px solid #7b7b7b;
     }
   }
 }

@@ -296,14 +296,15 @@ export class StockingComponent implements OnInit {
     MatSelectModule
   ],
   template: `
-   <h2 mat-dialog-title>
+   <h2 mat-dialog-title style="box-shadow: 0 0 4px #0000004d;">
   Edit Stock
 </h2>
 
 <mat-dialog-content class="dialog-content">
   <form [formGroup]="form" class="dialog-form" >
+  <div class="formInnerWrap">
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100% !important;">
       <mat-label>Item Type</mat-label>
       <mat-select formControlName="itemType">
         <mat-option *ngFor="let type of itemTypes" [value]="type">
@@ -312,16 +313,18 @@ export class StockingComponent implements OnInit {
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100% !important;">
       <mat-label>Available Quantity (Bags)</mat-label>
       <input matInput type="number" formControlName="availableQuantity">
       <span matSuffix>Bags</span>
     </mat-form-field>
 
+    </div>
+
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" style="box-shadow: 0 0 4px #0000004d;">
   <button mat-button (click)="onCancel()">Cancel</button>
   <button
     mat-raised-button
@@ -409,14 +412,14 @@ export class StockFormDialogComponent {
     MatSelectModule
   ],
   template: `
-   <h2 mat-dialog-title>
+   <h2 mat-dialog-title style="box-shadow: 0 0 4px #0000004d;">
   Add Stock
 </h2>
 
 <mat-dialog-content class="dialog-content">
   <form [formGroup]="form" class="dialog-form">
-
-    <mat-form-field appearance="outline">
+<div class="formInnerWrap">
+    <mat-form-field appearance="outline" style="width: 100% !important;">
       <mat-label>Item Type</mat-label>
       <mat-select formControlName="itemType" >
         <mat-option *ngFor="let type of itemTypes" [value]="type">
@@ -425,16 +428,17 @@ export class StockFormDialogComponent {
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100% !important;">
       <mat-label>Available Quantity (Bags)</mat-label>
       <input matInput type="number" formControlName="availableQuantity">
       <span matSuffix>Bags</span>
     </mat-form-field>
+    </div>
 
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" style="box-shadow: 0 0 4px #0000004d;">
   <button mat-button (click)="onCancel()">Cancel</button>
   <button
     mat-raised-button

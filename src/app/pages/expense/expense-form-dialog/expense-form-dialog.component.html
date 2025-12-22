@@ -4,17 +4,12 @@
 
 <mat-dialog-content class="px-6 py-4">
   <form [formGroup]="form" class="flex flex-col gap-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="formInnerWrap grid-cols-1 md:grid-cols-2 gap-4">
       <mat-form-field appearance="outline" class="md:col-span-2">
         <mat-label>Item</mat-label>
         <input matInput formControlName="item" required />
         <mat-error *ngIf="form.get('item')?.hasError('required')">Item is required</mat-error>
         <mat-error *ngIf="form.get('item')?.hasError('minlength')">Item is too short</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="md:col-span-2">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" rows="2"></textarea>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -46,6 +41,11 @@
       <mat-form-field appearance="outline" class="md:col-span-2">
         <mat-label>Receipt Number</mat-label>
         <input matInput formControlName="receiptNumber" />
+      </mat-form-field>
+
+        <mat-form-field appearance="outline" class="formTextarea md:col-span-2">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="2"></textarea>
       </mat-form-field>
     </div>
 

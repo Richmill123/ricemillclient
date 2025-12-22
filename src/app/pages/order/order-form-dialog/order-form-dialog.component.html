@@ -7,7 +7,7 @@
       <span>{{ error }}</span>
     </div>
     
-    <div class="row g-3">
+    <div class="row g-3 formInnerWrap">
       <div class="col-md-6">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
@@ -24,16 +24,6 @@
           <input matInput formControlName="villageName" placeholder="Enter village name" required>
           <mat-error *ngIf="isFieldInvalid('villageName')">
             {{ getErrorMessage('villageName') }}
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="col-12">
-        <mat-form-field appearance="outline">
-          <mat-label>Address</mat-label>
-          <textarea matInput formControlName="address" placeholder="Enter full address" rows="2" required></textarea>
-          <mat-error *ngIf="isFieldInvalid('address')">
-            {{ getErrorMessage('address') }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -98,6 +88,16 @@
           </mat-select>
           <mat-error *ngIf="isFieldInvalid('status')">
             {{ getErrorMessage('status') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12" style="width: 100% !important;">
+        <mat-form-field appearance="outline" class="formTextarea">
+          <mat-label>Address</mat-label>
+          <textarea matInput formControlName="address" placeholder="Enter full address" rows="2" required></textarea>
+          <mat-error *ngIf="isFieldInvalid('address')">
+            {{ getErrorMessage('address') }}
           </mat-error>
         </mat-form-field>
       </div>

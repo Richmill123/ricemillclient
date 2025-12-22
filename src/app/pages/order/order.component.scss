@@ -109,5 +109,17 @@
 .search-container{
   display: flex;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+}
+
+.text-container {
+  padding: 24px;
+    /* width: 100%; */
+    height: calc(100vh - 251px);
+    border: 1px dashed grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 20px;
 }
