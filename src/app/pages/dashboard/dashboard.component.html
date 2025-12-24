@@ -56,9 +56,9 @@
             <div class="kpi-title">Paddy Processed</div>
             <mat-icon class="kpi-icon">inventory_2</mat-icon>
           </div>
-          <div class="kpi-value">{{ formatNumber(d.paddyProcessed.totalBags) }} Bags</div>
+          <div class="kpi-value">{{ formatNumber(d.paddyProcessed.paidBags) }} Bags</div>
           <div class="kpi-sub">
-            <span>Paid Bags: {{ formatNumber(d.paddyProcessed.paidBags) }}</span>
+            <span>Total Bags: {{ formatNumber(d.paddyProcessed.totalBags) }}</span>
           </div>
         </mat-card>
       </div>
@@ -153,6 +153,39 @@
             <div class="row two-col" *ngFor="let key of ['bran','husk','black rice','broken rice','other']">
               <div class="cap">{{ key }}</div>
               <div class="right">{{ formatNumber(d.stock.available[key] ?? 0) }}</div>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="chart-panel panel">
+          <div class="panel-header compact">
+            <div class="panel-title">Order Status</div>
+          </div>
+          <div class="table">
+            <div class="row head">
+              <div>Status</div>
+              <div class="right">Orders</div>
+              <div class="right">Total Bags</div>
+            </div>
+            <div class="row">
+              <div class="cap">Initial Stocking</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Boiling Completed</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Splitting Completed</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Packed Ready</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.totalBags) }}</div>
             </div>
           </div>
         </mat-card>

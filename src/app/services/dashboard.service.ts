@@ -30,6 +30,18 @@ export interface StockAvailable {
   [key: string]: number;
 }
 
+export interface OrderStatus {
+  totalBags: number;
+  count: number;
+}
+
+export interface OrderStatuses {
+  initialStocking: OrderStatus;
+  boilingCompleted: OrderStatus;
+  splittingCompleted: OrderStatus;
+  packedReady: OrderStatus;
+}
+
 export interface DashboardMonth {
   month: number;
   revenue: RevenueSummary;
@@ -54,6 +66,7 @@ export interface DashboardResponse {
   stock: {
     available: StockAvailable;
   };
+  orderStatuses: OrderStatuses;
   yearly: {
     year: number;
     months: DashboardMonth[];

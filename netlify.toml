@@ -1,0 +1,52 @@
+[build]
+  publish = "dist/rice-mill"
+  
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/employees"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/expenses"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/orders"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/reports"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/sales"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/stock"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/wages"
+  to = "/index.html"
+  status = 200
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
