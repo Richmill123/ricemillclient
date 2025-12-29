@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export type DashboardItemType = 'bran' | 'husk' | 'black rice' | 'broken rice' | 'other';
+export type DashboardItemType = 'bran' | 'husk' | 'black rice' | 'broken rice' | 'Karika' | 'other';
 
 export interface AmountQuantity {
   quantity: number;
@@ -56,6 +56,12 @@ export interface DashboardResponse {
   revenue: RevenueSummary;
   expense: ExpenseSummary;
   profit: number;
+  todaySummary: {
+    totalOrder: number;
+    paddyTaken: number;
+    newOrder: number;
+    output: number;
+  };
   paddyProcessed: {
     totalBags: number;
     paidBags: number;
@@ -77,7 +83,8 @@ export interface DashboardResponse {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+  //private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+  private apiUrl = 'http://192.168.1.2:5000/api';
 
   constructor(private http: HttpClient) {}
 

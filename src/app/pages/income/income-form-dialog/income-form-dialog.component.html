@@ -1,0 +1,44 @@
+<h2 mat-dialog-title class="px-6 pt-4">
+  {{ data.isEdit ? 'Edit' : 'Add' }} Income
+</h2>
+
+<mat-dialog-content class="px-6 py-4">
+  <form [formGroup]="form" class="flex flex-col gap-4">
+    <div class="formInnerWrap grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline" class="md:col-span-2">
+        <mat-label>Item</mat-label>
+        <input matInput formControlName="item" required />
+        <mat-error *ngIf="form.get('item')?.hasError('required')">Item is required</mat-error>
+        <mat-error *ngIf="form.get('item')?.hasError('minlength')">Item is too short</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Amount (₹)</mat-label>
+        <input matInput type="number" formControlName="amount" min="0" required />
+        <mat-error *ngIf="form.get('amount')?.hasError('required')">Amount is required</mat-error>
+        <mat-error *ngIf="form.get('amount')?.hasError('min')">Amount cannot be negative</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput type="date" formControlName="date" required />
+        <mat-error *ngIf="form.get('date')?.hasError('required')">Date is required</mat-error>
+      </mat-form-field>
+
+        <mat-form-field appearance="outline" class="formTextarea md:col-span-2">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+
+    <mat-divider></mat-divider>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="px-6 pb-4 flex justify-end gap-2">
+  <button mat-button type="button" (click)="onCancel()" [disabled]="loading">Cancel</button>
+  <button mat-raised-button color="primary" type="button" (click)="onSave()" [disabled]="form.invalid || loading">
+    <span *ngIf="!loading">{{ data.isEdit ? 'Update' : 'Save' }}</span>
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+  </button>
+</mat-dialog-actions>

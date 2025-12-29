@@ -341,7 +341,7 @@ export class StockingComponent implements OnInit {
 export class StockFormDialogComponent {
   loading = false;
 
-  itemTypes = ['bran', 'husk', 'black rice', 'broken rice', 'others'];
+  itemTypes = ['bran', 'husk', 'black rice', 'broken rice', 'Karika', 'others'];
   form: FormGroup;
   @ViewChild('quantityInput') quantityInput: ElementRef<HTMLInputElement> | undefined;
 
@@ -455,7 +455,7 @@ export class StockFormDialogComponent {
 export class StockFormAddDialogComponent {
   loading = false;
 
-  itemTypes = ['bran', 'husk', 'black rice', 'broken rice', 'others'];
+  itemTypes = ['bran', 'husk', 'black rice', 'broken rice', 'Karika', 'others'];
   form: FormGroup;
 
   constructor(

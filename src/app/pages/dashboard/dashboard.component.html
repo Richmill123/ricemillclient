@@ -64,7 +64,55 @@
       </div>
 
       <div class="content-grid">
-        <mat-card class="panel chart-panel">
+        
+<mat-card class=" panel">
+          <div class="panel-header compact">
+            <div class="panel-title">Order Status</div>
+          </div>
+          <div class="table">
+            <div class="row head">
+              <div>Status</div>
+              <div class="right">Orders</div>
+              <div class="right">Total Bags</div>
+            </div>
+            <div class="row">
+              <div class="cap">Initial Stocking</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Boiling Completed</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Splitting Completed</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.totalBags) }}</div>
+            </div>
+            <div class="row">
+              <div class="cap">Packed Ready</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.count) }}</div>
+              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.totalBags) }}</div>
+            </div>
+          </div>
+        </mat-card>
+        <mat-card class="panel">
+          <div class="panel-header compact">
+            <div class="panel-title">Summary</div>
+          </div>
+          <div class="table">
+            <div class="row head two-col">
+              <div>Item</div>
+              <div class="right">Qty (Bags)</div>
+            </div>
+            <div class="row two-col" *ngFor="let item of summaryItems">
+              <div class="cap">{{ item.label }}</div>
+              <div class="right">{{ formatNumber(d.todaySummary?.[item.key] ?? 0) }}</div>
+            </div>
+          </div>
+        </mat-card>
+         <mat-card class="panel chart-panel">
           <div class="panel-header">
             <div>
               <div class="panel-title">Yearly Profit Trend</div>
@@ -122,7 +170,6 @@
             No monthly data.
           </div>
         </mat-card>
-
         <mat-card class="panel">
           <div class="panel-header compact">
             <div class="panel-title">Sales (by item type)</div>
@@ -133,7 +180,7 @@
               <div class="right">Qty</div>
               <div class="right">Amount</div>
             </div>
-            <div class="row" *ngFor="let key of ['bran','husk','black rice','broken rice','other']">
+            <div class="row" *ngFor="let key of ['bran','husk','black rice','broken rice','Karika','other']">
               <div class="cap">{{ key }}</div>
               <div class="right">{{ formatNumber(d.sales.byItemType[key]?.quantity ?? 0) }}</div>
               <div class="right">{{ formatCurrency(d.sales.byItemType[key]?.amount ?? 0) }}</div>
@@ -150,45 +197,16 @@
               <div>Item</div>
               <div class="right">Qty</div>
             </div>
-            <div class="row two-col" *ngFor="let key of ['bran','husk','black rice','broken rice','other']">
+            <div class="row two-col" *ngFor="let key of ['bran','husk','black rice','broken rice','Karika','other']">
               <div class="cap">{{ key }}</div>
               <div class="right">{{ formatNumber(d.stock.available[key] ?? 0) }}</div>
             </div>
           </div>
         </mat-card>
 
-        <mat-card class="chart-panel panel">
-          <div class="panel-header compact">
-            <div class="panel-title">Order Status</div>
-          </div>
-          <div class="table">
-            <div class="row head">
-              <div>Status</div>
-              <div class="right">Orders</div>
-              <div class="right">Total Bags</div>
-            </div>
-            <div class="row">
-              <div class="cap">Initial Stocking</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.count) }}</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.initialStocking.totalBags) }}</div>
-            </div>
-            <div class="row">
-              <div class="cap">Boiling Completed</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.count) }}</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.boilingCompleted.totalBags) }}</div>
-            </div>
-            <div class="row">
-              <div class="cap">Splitting Completed</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.count) }}</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.splittingCompleted.totalBags) }}</div>
-            </div>
-            <div class="row">
-              <div class="cap">Packed Ready</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.count) }}</div>
-              <div class="right">{{ formatNumber(d.orderStatuses.packedReady.totalBags) }}</div>
-            </div>
-          </div>
-        </mat-card>
+        
+
+       
       </div>
     </ng-container>
   </ng-container>

@@ -8,6 +8,7 @@ import { WagesComponent } from './pages/wages/wages.component';
 import { ExpenseComponent } from './pages/expense/expense.component';
 import { ReportComponent } from './pages/report/report.component';
 import { LoginComponent } from './pages/auth/login/login.component';
+import { incomeComponent } from './pages/income/income.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'sales', component: SalesComponent, title: 'Sales' },
   { path: 'stock', component: StockingComponent, title: 'Stock Management' },
   { path: 'wages', component: WagesComponent, title: 'Wages' },
+  { path: 'income', component: incomeComponent, title: 'Income' },
   { path: '**', redirectTo: '/dashboard' }
 ];

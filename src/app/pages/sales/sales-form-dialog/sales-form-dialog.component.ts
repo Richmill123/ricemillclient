@@ -44,7 +44,7 @@ export class SalesFormDialogComponent implements OnInit {
   form: FormGroup;
   loading = false;
 
-  readonly itemTypes: SaleItemType[] = ['bran', 'husk', 'black rice', 'broken rice', 'others'];
+  readonly itemTypes: SaleItemType[] = ['bran', 'husk', 'black rice', 'broken rice', 'Karika', 'others'];
   readonly paymentStatuses: PaymentStatus[] = ['Paid', 'Pending', 'Partially Paid'];
   readonly paymentMethods: PaymentMethod[] = ['Cash', 'UPI', 'Bank Transfer', 'Other'];
 

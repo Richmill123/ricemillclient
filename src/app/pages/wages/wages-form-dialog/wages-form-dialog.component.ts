@@ -20,7 +20,9 @@ export type WagesDialogResult = {
   typeOfWork: 'boiling' | 'splitting' | 'other';
   machineType: 'Electric' | 'Manual' | 'Hybrid';
   date: string;
+  advanceamount: string;
   notes?: string;
+  bags: number;
 };
 
 @Component({
@@ -61,9 +63,11 @@ export class WagesFormDialogComponent implements OnInit {
       employeeName: ['', [Validators.required, Validators.minLength(2)]],
       advanceWage: [0, [Validators.required, Validators.min(0)]],
       totalWage: [0, [Validators.required, Validators.min(0)]],
+      bags: [0, [Validators.required, Validators.min(0)]],
       typeOfWork: ['other', [Validators.required]],
       machineType: ['Hybrid', [Validators.required]],
       date: [today, [Validators.required]],
+      debt: [''],
       notes: ['']
     }, {
       validators: [this.advanceLessThanTotalValidator]
@@ -85,6 +89,8 @@ export class WagesFormDialogComponent implements OnInit {
         typeOfWork: w.typeOfWork ?? 'other',
         machineType: w.machineType ?? 'Hybrid',
         date: (w.date ?? '').slice(0, 10),
+        debt: w.advanceamount,
+        bags: w.bags,
         notes: w.notes ?? ''
       });
     }
@@ -118,6 +124,8 @@ export class WagesFormDialogComponent implements OnInit {
       typeOfWork: String(raw.typeOfWork).trim() as WagesDialogResult['typeOfWork'],
       machineType: String(raw.machineType).trim() as WagesDialogResult['machineType'],
       date: String(raw.date).trim(),
+      advanceamount: String(raw.debt),
+      bags: raw.bags,
       notes: raw.notes ? String(raw.notes).trim() : ''
     };
 

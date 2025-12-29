@@ -14,8 +14,11 @@ export interface Wage {
   machineType: string;
   date: string;
   clientId: string;
+  advanceamount?: string;
   notes?: string;
+  pendingamount?: string;
   createdAt?: string;
+  bags: number;
   updatedAt?: string;
 }
 
@@ -26,7 +29,9 @@ export type WageUpdateRequest = Partial<Omit<Wage, '_id' | 'createdAt' | 'update
   providedIn: 'root'
 })
 export class WagesService {
-  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+  //private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+    private apiUrl = 'http://192.168.1.2:5000/api';
+
 
   constructor(private http: HttpClient) {}
 

@@ -77,7 +77,8 @@ export class LoginComponent implements OnInit {
       })
     };
 
-    this.http.post<any>('https://richmill-git-main-richmill123s-projects.vercel.app/api/admins/login', loginData, httpOptions)
+    //this.http.post<any>('https://richmill-git-main-richmill123s-projects.vercel.app/api/admins/login', loginData, httpOptions)
+    this.http.post<any>('http://192.168.1.2:5000/api/admins/login', loginData, httpOptions)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.isLoading = false;
@@ -107,7 +108,7 @@ export class LoginComponent implements OnInit {
           this.isLoading = false;
           if (response.token) {
             sessionStorage.setItem('auth_token', response.token);
-            sessionStorage.setItem('user', JSON.stringify(this.username?.split('/')[0]));
+            sessionStorage.setItem('user',JSON.stringify(this.username?.split('/')[0]?.trim()));
           }
           
           this.toastr.success('Login successful!', 'Success', {

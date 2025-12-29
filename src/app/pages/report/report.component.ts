@@ -22,7 +22,7 @@ import { MatCardModule } from '@angular/material/card';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-type ReportType = 'Order' | 'Wages' | 'Sales' | 'Expense' | 'Stocking';
+type ReportType = 'Order' | 'Wages' | 'Sales' | 'Expense' | 'Stocking' | 'Income';
 
 @Component({
   selector: 'app-report',
@@ -49,7 +49,7 @@ export class ReportComponent {
   isSearchClicked = false;
   private gridApi!: GridApi;
 
-  reportTypes: ReportType[] = ['Order', 'Wages', 'Sales', 'Expense', 'Stocking'];
+  reportTypes: ReportType[] = ['Order', 'Wages', 'Sales', 'Expense', 'Stocking', 'Income'];
   selectedType: ReportType = 'Order';
 
   startDate: Date = new Date();
@@ -75,7 +75,8 @@ export class ReportComponent {
 
   clientId: string = '';
 
-  private baseUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+ //private baseUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+ private baseUrl = 'http://192.168.1.2:5000/api';
 
   constructor(private http: HttpClient) {
     const user = sessionStorage.getItem('user');
@@ -90,6 +91,39 @@ export class ReportComponent {
     this.gridApi.sizeColumnsToFit();
   }
 
+  private formatSaleItems(items: any): string {
+    if (!Array.isArray(items) || items.length === 0) return '';
+    return items
+      .map((i: any) => {
+        const type = String(i?.itemType ?? '').trim();
+        const qty = Number(i?.quantity ?? 0);
+        const rate = Number(i?.rate ?? 0);
+        const amt = Number(i?.amount ?? 0);
+        if (!type) return '';
+        return `${type}: ${qty} x ${rate} = ${amt}`;
+      })
+      .filter(Boolean)
+      .join(', ');
+  }
+
+  private formatCellValue(field: string, value: any): string {
+    if (value === null || value === undefined) return '';
+
+    if (field === 'items') {
+      return this.formatSaleItems(value);
+    }
+
+    if (value instanceof Date) {
+      return new Date(value).toLocaleDateString();
+    }
+
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+
+    return String(value);
+  }
+
   private setupGridColumns(sampleData: any): void {
     if (!sampleData) return;
 
@@ -99,14 +133,7 @@ export class ReportComponent {
         headerName: this.formatHeader(key),
         field: key,
         valueFormatter: (params: any) => {
-          if (!params.value) return '';
-          if (params.value instanceof Date) {
-            return new Date(params.value).toLocaleDateString();
-          }
-          if (typeof params.value === 'object') {
-            return JSON.stringify(params.value);
-          }
-          return params.value;
+          return this.formatCellValue(key, params.value);
         }
       }));
 
@@ -148,6 +175,9 @@ export class ReportComponent {
       case 'Stocking':
         apiUrl = `${this.baseUrl}/stock`;
         break;
+      case 'Income':
+        apiUrl = `${this.baseUrl}/income`;
+        break;
     }
 
     apiUrl += `?clientId=${this.clientId}&startDate=${start}&endDate=${end}`;
@@ -187,10 +217,7 @@ export class ReportComponent {
     const rows = this.rowData.map(row => {
       const r: any = {};
       columns.forEach(c => {
-        r[c.dataKey] =
-          typeof row[c.dataKey] === 'object'
-            ? JSON.stringify(row[c.dataKey])
-            : row[c.dataKey];
+        r[c.dataKey] = this.formatCellValue(c.dataKey, row[c.dataKey]);
       });
       return r;
     });

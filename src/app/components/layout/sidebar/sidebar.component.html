@@ -41,6 +41,11 @@
       <mat-icon>receipt_long</mat-icon>
       <span>Expenses</span>
     </a>
+
+    <a (click)="navigateTo('income')" [class.active]="isActive('income')">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Income</span>
+    </a>
     
     <a (click)="navigateTo('reports')" [class.active]="isActive('reports')">
       <mat-icon>description</mat-icon>

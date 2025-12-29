@@ -23,6 +23,13 @@ export class DashboardComponent {
   loading = false;
   data?: DashboardResponse;
 
+  summaryItems: Array<{ key: 'totalOrder' | 'paddyTaken' | 'newOrder' | 'output'; label: string }> = [
+    { key: 'totalOrder', label: 'Previous Order' },
+    { key: 'paddyTaken', label: 'Paddy Taken' },
+    { key: 'newOrder', label: 'New Order' },
+    { key: 'output', label: 'Total Order' }
+  ];
+
   constructor(
     private dashboardService: DashboardService,
     private snackBar: MatSnackBar
@@ -99,8 +106,11 @@ export class DashboardComponent {
   }
 
   formatCurrency(value: unknown): string {
-    const n = Number(value ?? 0);
-    return `₹${n.toLocaleString('en-IN')}`;
+      const n = Number(value ?? 0);
+      const isNegative = n < 0;
+      const absValue = Math.abs(n);
+    
+      return `${isNegative ? '-' : ''}₹${absValue.toLocaleString('en-IN')}`;
   }
 
   formatNumber(value: unknown): string {

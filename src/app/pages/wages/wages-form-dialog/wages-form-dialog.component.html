@@ -33,6 +33,8 @@
         <mat-error *ngIf="form.get('totalWage')?.hasError('min')">Total wage cannot be negative</mat-error>
       </mat-form-field>
 
+       
+
       <mat-form-field appearance="outline">
         <mat-label>Type of Work</mat-label>
         <mat-select formControlName="typeOfWork" required>
@@ -53,6 +55,18 @@
         <mat-label>Date</mat-label>
         <input matInput type="date" formControlName="date" required />
         <mat-error *ngIf="form.get('date')?.hasError('required')">Date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Bags Taken</mat-label>
+        <input matInput type="number" formControlName="bags" min="0" required />
+        <mat-error *ngIf="form.get('bags')?.hasError('required')">Bags Taken is required</mat-error>
+        <mat-error *ngIf="form.get('bags')?.hasError('min')">Bags Taken cannot be negative</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Debt</mat-label>
+        <input matInput formControlName="debt" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="formTextarea md:col-span-2">

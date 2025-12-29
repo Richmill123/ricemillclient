@@ -2,19 +2,19 @@ import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ColDef, GridApi, GridReadyEvent, ICellRendererParams, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
-import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { Wage, WagesService } from '../../services/wages.service';
-import { WagesDialogResult, WagesFormDialogComponent } from './wages-form-dialog/wages-form-dialog.component';
+import { Income, IncomeService } from '../../services/income.service';
+import { IncomeDialogResult, IncomeFormDialogComponent } from './income-form-dialog/income-form-dialog.component';
 
 @Component({
-  selector: 'app-wages',
+  selector: 'app-income',
   standalone: true,
   imports: [
     AgGridModule,
@@ -25,54 +25,30 @@ import { WagesDialogResult, WagesFormDialogComponent } from './wages-form-dialog
     MatInputModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './wages.component.html',
-  styleUrl: './wages.component.scss'
+  templateUrl: './income.component.html',
+  styleUrl: './income.component.scss'
 })
-export class WagesComponent {
+export class incomeComponent {
+
   private gridApi!: GridApi;
   public clientId = this.getClientId();
 
-  rowData: Wage[] = [];
+  rowData: Income[] = [];
   loading = false;
   searchTerm = '';
   private searchSubject = new Subject<string>();
 
   columnDefs: ColDef[] = [
-    { field: 'employeeName', headerName: 'Employee', sortable: true, filter: true, flex: 1 },
+    { field: 'item', headerName: 'Item', sortable: true, filter: true, flex: 1 },
+    { field: 'description', headerName: 'Description', sortable: true, filter: true, flex: 1 },
     {
-      field: 'advanceWage',
-      headerName: 'Advance',
+      field: 'amount',
+      headerName: 'Amount',
       sortable: true,
       filter: true,
       width: 140,
       valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
     },
-    {
-      field: 'advanceamount',
-      headerName: 'Debt',
-      sortable: true,
-      filter: true,
-      width: 140,
-      valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
-    },
-    {
-      field: 'totalWage',
-      headerName: 'Total',
-      sortable: true,
-      filter: true,
-      width: 140,
-      valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
-    },
-    {
-      field: 'pendingamount',
-      headerName: 'Pending Amount',
-      sortable: true,
-      filter: true,
-      width: 140,
-      valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
-    },
-    { field: 'typeOfWork', headerName: 'Work Type', sortable: true, filter: true, width: 150 },
-    { field: 'machineType', headerName: 'Machine', sortable: true, filter: true, width: 150 },
     {
       field: 'date',
       headerName: 'Date',
@@ -81,7 +57,6 @@ export class WagesComponent {
       width: 140,
       valueFormatter: (params) => this.dateFormatter(params?.value)
     },
-    { field: 'notes', headerName: 'Notes', sortable: true, filter: true, flex: 1 },
     {
       headerName: 'Actions',
       field: 'actions',
@@ -110,7 +85,7 @@ export class WagesComponent {
 
         deleteBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          componentRef.onDeleteClick(params.data?._id, params.data?.employeeName);
+          componentRef.onDeleteClick(params.data?._id, params.data?.item);
         });
 
         div.appendChild(editBtn);
@@ -127,7 +102,7 @@ export class WagesComponent {
   };
 
   constructor(
-    private wagesService: WagesService,
+    private incomeService: IncomeService,
     private dialog: MatDialog,
     private zone: NgZone,
     private snackBar: MatSnackBar
@@ -137,7 +112,7 @@ export class WagesComponent {
       distinctUntilChanged()
     ).subscribe(term => {
       this.searchTerm = term;
-      this.loadWages();
+      this.loadExpenses();
     });
   }
 
@@ -159,7 +134,7 @@ export class WagesComponent {
   }
 
   ngOnInit(): void {
-    this.loadWages();
+    this.loadExpenses();
   }
 
   onGridReady(params: GridReadyEvent): void {
@@ -171,31 +146,19 @@ export class WagesComponent {
     this.searchSubject.next(term);
   }
 
-  loadWages(): void {
+  loadExpenses(): void {
     this.loading = true;
-    this.wagesService.getWages().subscribe({
+    this.incomeService.getIncome().subscribe({
       next: (data) => {
         let filteredData = data || [];
-filteredData = data.map(w => ({
-  ...w,
-  pendingamount: String(
-    (w.totalWage ?? 0) -
-    (w.advanceWage ?? 0) -
-    (Number(w.advanceamount) ?? 0))
-}));
 
         if (this.searchTerm) {
           const searchLower = this.searchTerm.toLowerCase();
-          filteredData = filteredData.filter((w: Wage) =>
-            (w.employeeName || '').toLowerCase().includes(searchLower) ||
-            (w.typeOfWork || '').toLowerCase().includes(searchLower) ||
-            (w.machineType || '').toLowerCase().includes(searchLower) ||
-            (w.notes || '').toLowerCase().includes(searchLower) ||
-            String(w.totalWage ?? '').includes(this.searchTerm) ||
-            String(w.advanceWage ?? '').includes(this.searchTerm) ||
-            String(w.date ?? '').includes(this.searchTerm) || 
-            String(w.advanceamount ?? '').includes(this.searchTerm)  ||
-           String( w.pendingamount ?? '') .includes(this.searchTerm)
+          filteredData = filteredData.filter((e: Income) =>
+            (e.item || '').toLowerCase().includes(searchLower) ||
+            (e.description || '').toLowerCase().includes(searchLower) ||
+            String(e.amount ?? '').includes(searchLower) ||
+            String(e.date ?? '').includes(searchLower)
           );
         }
 
@@ -206,15 +169,18 @@ filteredData = data.map(w => ({
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading wages:', error);
-        this.snackBar.open(this.getApiErrorMessage(error, 'Error loading wages'), 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+        console.error('Error loading expenses:', error);
+        this.snackBar.open(this.getApiErrorMessage(error, 'Error loading expenses'), 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
         this.loading = false;
       }
     });
   }
 
   onAddClick(): void {
-    const dialogRef = this.dialog.open(WagesFormDialogComponent, {
+    const dialogRef = this.dialog.open(IncomeFormDialogComponent, {
       width: '700px',
       maxWidth: '95vw',
       disableClose: true,
@@ -222,18 +188,18 @@ filteredData = data.map(w => ({
       data: { isEdit: false }
     });
 
-    dialogRef.afterClosed().subscribe((result?: WagesDialogResult) => {
+    dialogRef.afterClosed().subscribe((result?: IncomeDialogResult) => {
       if (!result) return;
-      this.wagesService.createWage({
+      this.incomeService.createIncome({
         ...result,
-        clientId: this.clientId
+        clientId: this.clientId.trim()
       }).subscribe({
         next: () => {
-          this.snackBar.open('Wage added successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
-          this.loadWages();
+          this.snackBar.open('Expense added successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+          this.loadExpenses();
         },
         error: (error) => {
-          console.error('Error adding wage:', error);
+          console.error('Error adding expense:', error);
           this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
         }
       });
@@ -242,33 +208,33 @@ filteredData = data.map(w => ({
 
   onEditClick(id?: string): void {
     if (!id) return;
-    const wage = this.rowData.find(w => w._id === id);
-    if (!wage) {
-      this.snackBar.open('Wage not found', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+    const expense = this.rowData.find(e => e._id === id);
+    if (!expense) {
+      this.snackBar.open('Expense not found', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
       return;
     }
     this.zone.run(() => {
-      const dialogRef = this.dialog.open(WagesFormDialogComponent, {
+      const dialogRef = this.dialog.open(IncomeFormDialogComponent, {
         width: '700px',
         maxWidth: '95vw',
         disableClose: true,
         autoFocus: false,
-        data: { isEdit: true, wage: { ...wage } }
+        data: { isEdit: true, expense: { ...expense } }
       });
 
-      dialogRef.afterClosed().subscribe((result?: WagesDialogResult) => {
+      dialogRef.afterClosed().subscribe((result?: IncomeDialogResult) => {
         if (!result) return;
         this.loading = true;
-        this.wagesService.updateWage(id, {
+        this.incomeService.updateIncome(id, {
           ...result,
-          clientId: this.clientId
+          clientId: this.clientId.trim()
         }).subscribe({
           next: () => {
-            this.snackBar.open('Wage updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
-            this.loadWages();
+            this.snackBar.open('Expense updated successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+            this.loadExpenses();
           },
           error: (error) => {
-            console.error('Error updating wage:', error);
+            console.error('Error updating expense:', error);
             this.snackBar.open(error?.error?.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
             this.loading = false;
           }
@@ -277,31 +243,27 @@ filteredData = data.map(w => ({
     });
   }
 
-  onDeleteClick(id?: string, employeeName?: string): void {
+  onDeleteClick(id?: string, item?: string): void {
     if (!id) return;
-    if (!confirm(`Are you sure you want to delete wage entry${employeeName ? ` for ${employeeName}` : ''}? This action cannot be undone.`)) return;
+    if (!confirm(`Are you sure you want to delete expense${item ? ` for ${item}` : ''}? This action cannot be undone.`)) return;
     this.loading = true;
-    this.wagesService.deleteWage(id).subscribe({
+    this.incomeService.deleteIncome(id).subscribe({
       next: () => {
-        this.snackBar.open('Wage deleted successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
-        this.loadWages();
+        this.snackBar.open('Expense deleted successfully', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+        this.loadExpenses();
       },
       error: (error) => {
-        console.error('Error deleting wage:', error);
-        this.snackBar.open(this.getApiErrorMessage(error, 'Error deleting wage. Please try again.'), 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+        console.error('Error deleting expense:', error);
+        this.snackBar.open(this.getApiErrorMessage(error, 'Error deleting expense. Please try again.'), 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
         this.loading = false;
       }
     });
   }
 
   private currencyFormatter(params: ValueFormatterParams): string {
-  const value = Number(params.value ?? 0);
-  const isNegative = value < 0;
-  const absValue = Math.abs(value);
-
-  return `${isNegative ? '-' : ''}₹${absValue.toLocaleString('en-IN')}`;
-}
-
+    const value = Number(params.value ?? 0);
+    return `₹${value.toLocaleString('en-IN')}`;
+  }
 
   private dateFormatter(value: unknown): string {
     if (!value) return '';
