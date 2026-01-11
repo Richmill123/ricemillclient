@@ -18,6 +18,7 @@ export type ExpenseDialogResult = {
   amount: number;
   category?: string;
   date: string;
+  createdAt: string;
   paymentMethod: PaymentMethod;
   receiptNumber?: string;
 };
@@ -104,6 +105,7 @@ export class ExpenseFormDialogComponent implements OnInit {
       amount: Number(raw.amount ?? 0),
       category: raw.category ? String(raw.category).trim() : '',
       date: String(raw.date).trim(),
+      createdAt: String(raw.date).trim(),
       paymentMethod: String(raw.paymentMethod).trim() as PaymentMethod,
       receiptNumber: raw.receiptNumber ? String(raw.receiptNumber).trim() : ''
     };

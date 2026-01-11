@@ -102,6 +102,22 @@
           Salary cannot be negative
         </mat-error>
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Debt (₹)</mat-label>
+        <input matInput type="number" formControlName="debtAmount" min="0">
+        <mat-error *ngIf="form.get('debtAmount')?.hasError('min')">
+          Debt cannot be negative
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Advance Amount (₹)</mat-label>
+        <input matInput type="number" formControlName="advanceAmount" min="0">
+        <mat-error *ngIf="form.get('advanceAmount')?.hasError('min')">
+          Advance Amount cannot be negative
+        </mat-error>
+      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

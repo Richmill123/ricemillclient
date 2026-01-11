@@ -17,6 +17,7 @@ export type IncomeDialogResult = {
   description?: string;
   amount: number;
   date: string;
+  createdAt: string;
 };
 
 @Component({
@@ -93,7 +94,8 @@ export class IncomeFormDialogComponent implements OnInit {
       item: String(raw.item).trim(),
       description: raw.description ? String(raw.description).trim() : '',
       amount: Number(raw.amount ?? 0),
-      date: String(raw.date).trim()
+      date: String(raw.date).trim(),
+      createdAt : String(raw.date).trim(),
     };
 
     setTimeout(() => {

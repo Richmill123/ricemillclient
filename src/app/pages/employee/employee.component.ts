@@ -68,6 +68,22 @@ export class EmployeeComponent {
       valueFormatter: this.currencyFormatter
     },
     {
+      field: 'debtAmount',
+      headerName: 'Debt',
+      sortable: true,
+      filter: true,
+      width: 150,
+      valueFormatter: this.currencyFormatter
+    },
+    {
+      field: 'pendingSalary',
+      headerName: 'Pending Salary',
+      sortable: true,
+      filter: true,
+      width: 150,
+      valueFormatter: this.currencyFormatter
+    },
+    {
       headerName: 'Actions',
       field: 'actions',
       sortable: false,
@@ -150,11 +166,23 @@ export class EmployeeComponent {
     this.loading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
-        let filteredData = data;
+        const normalizedData = data.map((employee: Employee & { debtAmount?: number; pendingSalary?: number }) => {
+          const salary = Number((employee as any).salary) || 0;
+          const debtAmount = Number((employee as any).debtAmount) || 0;
+          const pendingSalary = Math.max(0, salary - debtAmount);
+          return {
+            ...(employee as any),
+            salary,
+            debtAmount,
+            pendingSalary
+          };
+        });
+
+        let filteredData = normalizedData;
 
         if (this.searchTerm) {
           const searchLower = this.searchTerm.toLowerCase();
-          filteredData = data.filter((employee: Employee) =>
+          filteredData = normalizedData.filter((employee: Employee) =>
             employee.name.toLowerCase().includes(searchLower) ||
             employee.phoneNumber.includes(this.searchTerm)
           );

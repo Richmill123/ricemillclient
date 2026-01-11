@@ -61,6 +61,8 @@ export class EmployeeFormDialogComponent implements OnInit {
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       emergencyContactNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       maritalStatus: ['', Validators.required],
+      advanceAmount: [0, [Validators.min(0)]],
+      debtAmount: [0, [Validators.min(0)]],
       salary: [0, [Validators.required, Validators.min(0)]]
     });
   }

@@ -77,8 +77,8 @@ export class LoginComponent implements OnInit {
       })
     };
 
-    //this.http.post<any>('https://richmill-git-main-richmill123s-projects.vercel.app/api/admins/login', loginData, httpOptions)
-    this.http.post<any>('http://192.168.1.2:5000/api/admins/login', loginData, httpOptions)
+    this.http.post<any>('https://richmill-git-main-richmill123s-projects.vercel.app/api/admins/login', loginData, httpOptions)
+    //this.http.post<any>('http://192.168.1.2:5000/api/admins/login', loginData, httpOptions)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.isLoading = false;

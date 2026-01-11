@@ -69,6 +69,7 @@ export class OrderFormDialogComponent implements OnInit {
     if (this.isEdit && data?.orderData) {
       this.orderId = data.orderData._id;
     }
+    const today = new Date().toISOString().slice(0, 10);
     this.orderForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       villageName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -94,11 +95,22 @@ export class OrderFormDialogComponent implements OnInit {
         Validators.min(0),
         Validators.pattern('^[0-9]+(\.[0-9]{1,2})?$')
       ]],
+      splittingincome: [''],
+       createdAt: [today, [Validators.required]],
       status: [ORDER_STATUS.CREATED, [Validators.required]]
     }, {
       validators: [this.advanceLessThanTotalValidator],
       updateOn: 'blur'
     });
+  }
+
+  private normalizeDateForInput(value: any): string {
+    if (!value) return '';
+    if (typeof value === 'string') {
+      return value.length >= 10 ? value.slice(0, 10) : value;
+    }
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
   }
 
   ngOnInit() {
@@ -113,6 +125,8 @@ export class OrderFormDialogComponent implements OnInit {
         numberOfBags: orderData.numberOfBags,
         totalAmount: orderData.totalAmount,
         advanceAmount: orderData.advanceAmount,
+        splittingincome: orderData.splittingincome,
+        createdAt: this.normalizeDateForInput(orderData.createdAt),
         status: orderData.status
       });
     }

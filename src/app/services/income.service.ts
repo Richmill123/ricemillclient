@@ -21,8 +21,8 @@ export type IncomeUpdateRequest = Partial<Omit<Income, '_id' | 'createdAt' | 'up
   providedIn: 'root'
 })
 export class IncomeService {
-  //private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
-    private apiUrl = 'http://192.168.1.2:5000/api';
+  private apiUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+  //  private apiUrl = 'http://192.168.1.2:5000/api';
 
 
   constructor(private http: HttpClient) {}

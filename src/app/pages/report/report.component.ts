@@ -75,8 +75,8 @@ export class ReportComponent {
 
   clientId: string = '';
 
- //private baseUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
- private baseUrl = 'http://192.168.1.2:5000/api';
+ private baseUrl = 'https://richmill-git-main-richmill123s-projects.vercel.app/api';
+ //private baseUrl = 'http://192.168.1.2:5000/api';
 
   constructor(private http: HttpClient) {
     const user = sessionStorage.getItem('user');
