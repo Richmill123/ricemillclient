@@ -76,6 +76,14 @@ export class EmployeeComponent {
       valueFormatter: this.currencyFormatter
     },
     {
+      field: 'advanceAmount',
+      headerName: 'Advance Debt',
+      sortable: true,
+      filter: true,
+      width: 150,
+      valueFormatter: this.currencyFormatter
+    },
+    {
       field: 'pendingSalary',
       headerName: 'Pending Salary',
       sortable: true,

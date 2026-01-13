@@ -64,6 +64,14 @@ export class WagesComponent {
       valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
     },
     {
+      field: 'advancedebtamount',
+      headerName: 'Advance Debt',
+      sortable: true,
+      filter: true,
+      width: 120,
+      valueFormatter: this.currencyFormatter
+    },
+    {
       field: 'pendingamount',
       headerName: 'Pending Amount',
       sortable: true,
@@ -71,23 +79,22 @@ export class WagesComponent {
       width: 140,
       valueFormatter: (p: ValueFormatterParams) => this.currencyFormatter(p)
     },
-    { field: 'typeOfWork', headerName: 'Work Type', sortable: true, filter: true, width: 150 },
-    { field: 'machineType', headerName: 'Machine', sortable: true, filter: true, width: 150 },
+    { field: 'typeOfWork', headerName: 'Work Type', sortable: true, filter: true, width: 130 },
+    { field: 'machineType', headerName: 'Machine', sortable: true, filter: true, width: 130 },
     {
       field: 'date',
       headerName: 'Date',
       sortable: true,
       filter: true,
-      width: 140,
+      width: 130,
       valueFormatter: (params) => this.dateFormatter(params?.value)
     },
-    { field: 'notes', headerName: 'Notes', sortable: true, filter: true, flex: 1 },
     {
       headerName: 'Actions',
       field: 'actions',
       sortable: false,
       filter: false,
-      width: 120,
+      width: 150,
       cellRenderer: (params: ICellRendererParams) => {
         const div = document.createElement('div');
         div.className = 'gridActionBtnWrap';
