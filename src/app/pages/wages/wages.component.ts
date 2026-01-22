@@ -187,8 +187,7 @@ filteredData = data.map(w => ({
   ...w,
   pendingamount: String(
     (w.totalWage ?? 0) -
-    (w.advanceWage ?? 0) -
-    (Number(w.advanceamount) ?? 0))
+    (w.advanceWage ?? 0))
 }));
 
         if (this.searchTerm) {

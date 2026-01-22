@@ -84,14 +84,6 @@ export class EmployeeComponent {
       valueFormatter: this.currencyFormatter
     },
     {
-      field: 'pendingSalary',
-      headerName: 'Pending Salary',
-      sortable: true,
-      filter: true,
-      width: 150,
-      valueFormatter: this.currencyFormatter
-    },
-    {
       headerName: 'Actions',
       field: 'actions',
       sortable: false,
@@ -177,12 +169,10 @@ export class EmployeeComponent {
         const normalizedData = data.map((employee: Employee & { debtAmount?: number; pendingSalary?: number }) => {
           const salary = Number((employee as any).salary) || 0;
           const debtAmount = Number((employee as any).debtAmount) || 0;
-          const pendingSalary = Math.max(0, salary - debtAmount);
           return {
             ...(employee as any),
             salary,
-            debtAmount,
-            pendingSalary
+            debtAmount
           };
         });
 
