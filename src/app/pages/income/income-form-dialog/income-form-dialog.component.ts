@@ -16,8 +16,11 @@ export type IncomeDialogResult = {
   item: string;
   description?: string;
   amount: number;
+  category?: string;
   date: string;
   createdAt: string;
+  paymentMethod: PaymentMethod;
+  receiptNumber?: string;
 };
 
 @Component({
@@ -56,7 +59,10 @@ export class IncomeFormDialogComponent implements OnInit {
       item: ['', [Validators.required, Validators.minLength(2)]],
       description: [''],
       amount: [0, [Validators.required, Validators.min(0)]],
-      date: [today, [Validators.required]]
+      category: [''],
+      date: [today, [Validators.required]],
+      paymentMethod: ['Cash' as PaymentMethod, [Validators.required]],
+      receiptNumber: ['']
     });
 
     this.dialogRef.afterOpened().subscribe(() => {
@@ -71,7 +77,10 @@ export class IncomeFormDialogComponent implements OnInit {
         item: e.item ?? '',
         description: e.description ?? '',
         amount: Number(e.amount ?? 0),
-        date: (e.date ?? '').slice(0, 10)
+        category: e.category ?? '',
+        date: (e.date ?? '').slice(0, 10),
+        paymentMethod: (e.paymentMethod ?? 'Cash') as PaymentMethod,
+        receiptNumber: e.receiptNumber ?? ''
       });
     }
   }
@@ -94,8 +103,11 @@ export class IncomeFormDialogComponent implements OnInit {
       item: String(raw.item).trim(),
       description: raw.description ? String(raw.description).trim() : '',
       amount: Number(raw.amount ?? 0),
+      category: raw.category ? String(raw.category).trim() : '',
       date: String(raw.date).trim(),
-      createdAt : String(raw.date).trim(),
+      createdAt: String(raw.date).trim(),
+      paymentMethod: String(raw.paymentMethod).trim() as PaymentMethod,
+      receiptNumber: raw.receiptNumber ? String(raw.receiptNumber).trim() : ''
     };
 
     setTimeout(() => {

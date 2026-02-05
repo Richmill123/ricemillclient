@@ -41,6 +41,7 @@ export class incomeComponent {
   columnDefs: ColDef[] = [
     { field: 'item', headerName: 'Item', sortable: true, filter: true, flex: 1 },
     { field: 'description', headerName: 'Description', sortable: true, filter: true, flex: 1 },
+    { field: 'category', headerName: 'Category', sortable: true, filter: true, width: 140 },
     {
       field: 'amount',
       headerName: 'Amount',
@@ -57,6 +58,8 @@ export class incomeComponent {
       width: 140,
       valueFormatter: (params) => this.dateFormatter(params?.value)
     },
+    { field: 'paymentMethod', headerName: 'Payment', sortable: true, filter: true, width: 160 },
+    { field: 'receiptNumber', headerName: 'Receipt', sortable: true, filter: true, width: 160 },
     {
       headerName: 'Actions',
       field: 'actions',
@@ -154,12 +157,15 @@ export class incomeComponent {
 
         if (this.searchTerm) {
           const searchLower = this.searchTerm.toLowerCase();
-          filteredData = filteredData.filter((e: Income) =>
-            (e.item || '').toLowerCase().includes(searchLower) ||
-            (e.description || '').toLowerCase().includes(searchLower) ||
-            String(e.amount ?? '').includes(searchLower) ||
-            String(e.date ?? '').includes(searchLower)
-          );
+                    filteredData = filteredData.filter((e: Income) =>
+                      (e.item || '').toLowerCase().includes(searchLower) ||
+                      (e.description || '').toLowerCase().includes(searchLower) ||
+                      (e.category || '').toLowerCase().includes(searchLower) ||
+                      (e.paymentMethod || '').toLowerCase().includes(searchLower) ||
+                      (e.receiptNumber || '').toLowerCase().includes(searchLower) ||
+                      String(e.amount ?? '').includes(this.searchTerm) ||
+                      String(e.date ?? '').includes(this.searchTerm)
+                    );
         }
 
         this.rowData = filteredData;

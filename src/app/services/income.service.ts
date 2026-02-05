@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export type PaymentMethod = 'Cash' | 'Bank Transfer' | 'UPI' | 'Cheque' | 'Other';
+
 export interface Income {
   _id?: string;
   clientId: string;
-  item: string;
-  description?: string;
-  amount: number;
-  date: string;
-  recordedBy?: string;
-  createdAt?: string;
-  updatedAt?: string;
+    item: string;
+    description?: string;
+    amount: number;
+    category?: string;
+    date: string;
+    paymentMethod: PaymentMethod;
+    receiptNumber?: string;
+    recordedBy?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export type IncomeCreateRequest = Omit<Income, '_id' | 'createdAt' | 'updatedAt'>;

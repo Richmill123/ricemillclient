@@ -3,7 +3,7 @@
 </h2>
 
 <mat-dialog-content class="px-6 py-4">
-  <form [formGroup]="form" class="flex flex-col gap-4">
+   <form [formGroup]="form" class="flex flex-col gap-4">
     <div class="formInnerWrap grid-cols-1 md:grid-cols-2 gap-4">
       <mat-form-field appearance="outline" class="md:col-span-2">
         <mat-label>Item</mat-label>
@@ -20,9 +20,27 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <input matInput formControlName="category" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
         <input matInput type="date" formControlName="date" required />
         <mat-error *ngIf="form.get('date')?.hasError('required')">Date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod" required>
+          <mat-option *ngFor="let m of paymentMethods" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('paymentMethod')?.hasError('required')">Payment method is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="md:col-span-2">
+        <mat-label>Receipt Number</mat-label>
+        <input matInput formControlName="receiptNumber" />
       </mat-form-field>
 
         <mat-form-field appearance="outline" class="formTextarea md:col-span-2">

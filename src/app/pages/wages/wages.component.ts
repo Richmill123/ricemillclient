@@ -196,7 +196,7 @@ filteredData = data.map(w => ({
             (w.employeeName || '').toLowerCase().includes(searchLower) ||
             (w.typeOfWork || '').toLowerCase().includes(searchLower) ||
             (w.machineType || '').toLowerCase().includes(searchLower) ||
-            (w.notes || '').toLowerCase().includes(searchLower) ||
+            (w.note || '').toLowerCase().includes(searchLower) ||
             String(w.totalWage ?? '').includes(this.searchTerm) ||
             String(w.advanceWage ?? '').includes(this.searchTerm) ||
             String(w.date ?? '').includes(this.searchTerm) || 

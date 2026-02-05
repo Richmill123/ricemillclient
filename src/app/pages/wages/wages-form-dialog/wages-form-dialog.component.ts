@@ -21,7 +21,7 @@ export type WagesDialogResult = {
   machineType: 'Electric' | 'Manual' | 'Hybrid';
   date: string;
   advanceamount: string;
-  notes?: string;
+  note?: string;
   createdAt?: string;
   bags: number;
   advancedebtamount: number;
@@ -71,7 +71,7 @@ export class WagesFormDialogComponent implements OnInit {
       date: [today, [Validators.required]],
       debt: [''],
       advancedebtamount: [''],
-      notes: ['']
+      note: ['']
     }, {
       validators: [this.advanceLessThanTotalValidator]
     });
@@ -95,7 +95,7 @@ export class WagesFormDialogComponent implements OnInit {
         debt: w.advanceamount,
         bags: w.bags,
         advancedebtamount: Number(w.advancedebtamount ?? 0),
-        notes: w.notes ?? ''
+        note: w.note ?? ''
       });
     }
   }
@@ -132,7 +132,7 @@ export class WagesFormDialogComponent implements OnInit {
       bags: raw.bags,
       createdAt: String(raw.date).trim(),
       advancedebtamount: Number(raw.advancedebtamount ?? 0),
-      notes: raw.notes ? String(raw.notes).trim() : ''
+      note: raw.note ? String(raw.note).trim() : ''
     };
 
     setTimeout(() => {

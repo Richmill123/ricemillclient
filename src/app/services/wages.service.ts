@@ -21,6 +21,7 @@ export interface Wage {
   bags: number;
   advancedebtamount?: number;
   updatedAt?: string;
+  note?: string;
 }
 
 export type WageCreateRequest = Omit<Wage, '_id' | 'createdAt' | 'updatedAt'>;
