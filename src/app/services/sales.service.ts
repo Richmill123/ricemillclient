@@ -21,6 +21,7 @@ export interface Sale {
   address: string;
   items: SaleItem[];
   totalAmount: number;
+  mydebt: number;
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
   createdAt?: string;

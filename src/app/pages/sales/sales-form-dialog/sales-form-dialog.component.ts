@@ -18,6 +18,7 @@ export type SalesDialogResult = {
   address: string;
   items: SaleItem[];
   totalAmount: number;
+  mydebt: number;
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
 };
@@ -60,6 +61,7 @@ export class SalesFormDialogComponent implements OnInit {
       address: ['', Validators.required],
       items: this.fb.array([]),
       totalAmount: [{ value: 0, disabled: true }, [Validators.required]],
+      mydebt: [{ value: 0, }],
       paymentStatus: ['Pending' as PaymentStatus, Validators.required],
       paymentMethod: ['Cash' as PaymentMethod, Validators.required]
     });
@@ -76,7 +78,8 @@ export class SalesFormDialogComponent implements OnInit {
         phoneNumber: sale.phoneNumber,
         address: sale.address,
         paymentStatus: sale.paymentStatus,
-        paymentMethod: sale.paymentMethod
+        paymentMethod: sale.paymentMethod,
+        mydebt: sale.mydebt
       });
 
       this.clearItems();
@@ -169,6 +172,7 @@ export class SalesFormDialogComponent implements OnInit {
       address: String(raw.address).trim(),
       items,
       totalAmount: Number(raw.totalAmount ?? 0),
+      mydebt: Number(raw.mydebt ?? 0),
       paymentStatus: raw.paymentStatus as PaymentStatus,
       paymentMethod: raw.paymentMethod as PaymentMethod
     };

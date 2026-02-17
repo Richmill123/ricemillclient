@@ -50,6 +50,19 @@ export class SalesComponent {
       valueGetter: (params) => this.formatItems(params.data?.items)
     },
     { field: 'totalAmount', headerName: 'Total', sortable: true, filter: true, width: 140 },
+    { field: 'mydebt', headerName: 'My Debt', sortable: true, filter: true, width: 140 },
+    { field: 'balance', headerName: 'Balance', sortable: true, filter: true, width: 140, valueGetter: (params) => params.data?.balance || 0 },
+    { 
+      headerName: 'Balance - My Debt', 
+      sortable: true, 
+      filter: true, 
+      width: 160,
+      valueGetter: (params) => {
+        const totalAmount = params.data?.totalAmount || 0;
+        const mydebt = params.data?.mydebt || 0;
+        return mydebt - totalAmount > 0 ? mydebt - totalAmount : 0;
+      }
+    },
     { field: 'paymentStatus', headerName: 'Status', sortable: true, filter: true, width: 150 },
     { field: 'paymentMethod', headerName: 'Method', sortable: true, filter: true, width: 150 },
     {
